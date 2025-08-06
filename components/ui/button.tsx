@@ -18,8 +18,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-lg hover:shadow-xl",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        hero: "bg-gradient-to-r from-brand-purple to-brand-purple/90 text-white hover:from-brand-purple/90 hover:to-brand-purple/80 shadow-2xl hover:shadow-purple-500/25 border-0",
-        gold: "bg-gradient-to-r from-brand-gold to-brand-gold-light text-primary hover:from-brand-gold/90 hover:to-brand-gold/90 shadow-lg hover:shadow-xl",
+        hero: "bg-primary from-brand-purple to-brand-purple/90 text-white hover:from-brand-purple/90 hover:to-brand-purple/80 shadow-2xl hover:shadow-purple-500/25 border-0",
+        gold: "bg-primary from-brand-gold to-brand-gold-light text-primary hover:from-brand-gold/90 hover:to-brand-gold/90 shadow-lg hover:shadow-xl",
         "outline-gold": "border-2 border-brand-gold text-brand-gold bg-background hover:bg-brand-gold hover:text-primary transition-all duration-300",
       },
       size: {

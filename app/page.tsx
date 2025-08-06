@@ -5,7 +5,6 @@ import FleetSection from "@/components/FleetSection";
 import Footer from "@/components/Footer";
 import HeathrowSection from "@/components/HeathrowSection";
 import HeroSectionWithMap from "@/components/HeroSectionWithMap";
-import Navigation from "@/components/Navigation";
 import NewsletterSection from "@/components/NewsletterSection";
 import ServicesSection from "@/components/ServiceSection";
 import TestimonialsSection from "@/components/TestimonialSection";
@@ -13,7 +12,6 @@ import TestimonialsSection from "@/components/TestimonialSection";
 export default function Home() {
   return (
 <div className="min-h-screen bg-background">
-      <Navigation />
       <HeroSectionWithMap />
       <ServicesSection />
       <HeathrowSection />

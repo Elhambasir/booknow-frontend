@@ -29,14 +29,17 @@ export const getPrice = (
     const airport_fee = options?.airport_fee ?? 0;
 
     const additions_total = meet_greet + child_seat + airport_fee;
-    let total = calculatedPrices.totalFare + additions_total;
-    if (type === "return") total *= 1.85;
-
+    let from_amount = calculatedPrices.totalFare + additions_total;
+    let return_amount = 0;
+    if (type === "return") return_amount = from_amount;
+    const total = from_amount + return_amount;
     const vatRate = 0.2;
     const subtotal = total / (1 + vatRate);
     const tax = total - subtotal;
     return {
       total,
+      from_amount,
+      return_amount,
       meet_greet,
       child_seat,
       subtotal,

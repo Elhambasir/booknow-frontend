@@ -1,3 +1,4 @@
+export type TripType = 'one way' | 'return'
 export type Location = {
   address: string;
   postcode: string;
@@ -58,7 +59,7 @@ export interface IBooking {
   luggage: number;
   from_location: Location | null;
   to_location: Location | null;
-  date: string;
+  date?: Date;
   time: string;
   from_package?: IPackage;
   from_distance: number;
@@ -68,7 +69,7 @@ export interface IBooking {
   // The return section should only be present if the type is 'return'
   return_from?: Location | null;
   return_to?: Location | null;
-  return_date?: string | null;
+  return_date?: Date;
   return_time?: string | null;
   return_package?: IPackage | undefined;
   return_distance?: number | undefined;
@@ -76,12 +77,11 @@ export interface IBooking {
   return_amount?: number | null;
 
   // Optional fields for both 'one way' and 'return' booking types
-  meet_greet: number;
+  meet_greet: boolean;
   child_seat: number;
   airport_fee: number;
   flight_number?: string;
-  basePrice: number;
-  totalPrice: number;
+  totalFare: number;
   user?: IGuestUser;
 }
 export type IGuestUser = {

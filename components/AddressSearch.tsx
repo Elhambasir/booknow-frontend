@@ -6,14 +6,17 @@ import {
   isAirportQuery,
   AirportTerminal,
 } from "@/lib/airportDatabase";
-import { Location } from "@/types/booking";
+import { Location } from "@/types";
 import { useLocationStore } from "@/store/useLocationStore";
 import { useBookingStore } from "@/store/bookingStore";
+import { Label } from "./ui/label";
 interface AddressSearchProps {
   onLocationSelect: (location: Location) => void;
   placeholder: string;
   selectedLocation: Location | null;
   type: "pickup" | "dropoff";
+  label: string;
+  isRequired?: boolean;
 }
 
 interface AddressListResult {
@@ -81,6 +84,8 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
   placeholder,
   selectedLocation,
   type,
+  label,
+  isRequired=false,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -338,6 +343,9 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
 
   return (
     <div className="relative" ref={searchRef}>
+      <Label className="mb-2">
+        {label} {isRequired && <span className="text-red-500">*</span>}
+      </Label>
       <div className="relative">
         <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
         <input

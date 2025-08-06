@@ -18,11 +18,12 @@ const formatDate = (dateData: any) => {
 };
 export default function BookingSummary() {
   const booking = useBookingStore((state) => state.booking);
-  const getBookingSummary = useBookingStore((state) => state.getBookingSummary);
-  const summary = React.useMemo(() => {
-    return getBookingSummary();
-  }, [booking]);
-  console.log("CURRENT BOOKING", booking);
+  const currentStep = useBookingStore((state)=> state.currentStep);
+  console.log("BOOKING SUMMARY", booking);
+  // const getBookingSummary = useBookingStore((state) => state.getBookingSummary);
+  // const summary = React.useMemo(() => {
+  //   return getBookingSummary();
+  // }, [booking]);
   return (
     <Card className="shadow-xl border-2 border-primary/10 sticky top-6">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -71,13 +72,13 @@ export default function BookingSummary() {
               )}
             </div>
 
-            {summary.total > 0 && (
+            {currentStep>1 && (
               <div className="border-t pt-4">
                 <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-4 rounded-xl">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">Total Fare:</span>
                     <span className="text-2xl font-bold text-primary">
-                      £{summary.total}
+                      £{booking.totalFare?.toFixed()}
                     </span>
                   </div>
                   {booking.type === "return" && (

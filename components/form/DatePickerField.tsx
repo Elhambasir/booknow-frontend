@@ -2,16 +2,11 @@
 
 import { CalendarIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import {
-  Button,
-  DatePicker,
-  Dialog,
-  Group,
-  Popover,
-} from "react-aria-components";
-
-import { Calendar } from "@/components/ui/calendar-rac";
-import { DateInput } from "@/components/ui/datefield-rac";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { startOfDay } from "date-fns";
 import {
   FormControl,
   FormField,
@@ -19,45 +14,67 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type DatePickerFieldProps = {
   name: string;
   label: string;
+  isRequired?: boolean;
 };
 
-export default function DatePickerField({ name, label }: DatePickerFieldProps) {
+export default function DatePickerField({
+  name,
+  label,
+  isRequired = false,
+}: DatePickerFieldProps) {
   const form = useFormContext();
 
   return (
     <FormField
       control={form.control}
       name={name}
+      rules={isRequired ? { required: `${label} is required` } : {}}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel>
+            {label} {isRequired && <span className="text-red-500">*</span>}
+          </FormLabel>
           <FormControl>
-            <DatePicker
-              className="*:not-first:mt-2"
-              value={field.value}
-              onChange={field.onChange}
-            >
-              <div className="flex">
-                <Group className="w-full">
-                  <DateInput className="pe-9" />
-                </Group>
-                <Button className="text-muted-foreground/80 hover:text-foreground data-focus-visible:border-ring data-focus-visible:ring-ring/50 z-10 -ms-9 -me-px flex w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none data-focus-visible:ring-[3px]">
-                  <CalendarIcon size={16} />
-                </Button>
-              </div>
-              <Popover
-                className="bg-background text-popover-foreground data-entering:animate-in data-exiting:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 z-50 rounded-lg border shadow-lg outline-hidden"
-                offset={4}
-              >
-                <Dialog className="max-h-[inherit] overflow-auto p-2">
-                  <Calendar />
-                </Dialog>
-              </Popover>
-            </DatePicker>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-auto pl-3 text-left font-normal",
+                      !field.value && "text-muted-foreground"
+                    )}
+                  >
+                    {field.value ? (
+                      format(field.value, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  fromYear={new Date().getFullYear()} // minimum year in dropdown
+                  toYear={new Date().getFullYear()} // maximum year in dropdown
+                  disabled={(date) => date < startOfDay(new Date())}
+                  captionLayout="dropdown"
+                />
+              </PopoverContent>
+            </Popover>
           </FormControl>
           <FormMessage />
         </FormItem>

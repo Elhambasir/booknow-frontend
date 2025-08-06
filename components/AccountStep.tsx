@@ -4,61 +4,69 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { User, Lock, UserPlus } from "lucide-react";
-import { toast } from 'sonner';
+import { User, Lock, UserPlus, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 interface AccountStepProps {
   onNext: () => void;
   onAuthSuccess?: (userData: any) => void;
+  handleBack: ()=> void;
 }
 
-const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
-  const [authType, setAuthType] = useState<'guest' | 'login' | 'signup'>('guest');
+const AccountStep = ({ onNext, onAuthSuccess, handleBack }: AccountStepProps) => {
+  const [authType, setAuthType] = useState<"guest" | "login" | "signup">(
+    "guest"
+  );
   const [formData, setFormData] = useState({
     // Guest fields
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone_number: '',
-    gender: '',
-    birth_date: '',
-    flight_number: '',
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    gender: "",
+    birth_date: "",
+    flight_number: "",
     // Auth fields
-    password: '',
-    confirmPassword: ''
+    password: "",
+    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    
+
     try {
-      if (authType === 'guest') {
+      if (authType === "guest") {
         // Validate guest form
-        const requiredFields = ['first_name', 'last_name', 'email', 'phone_number'];
-        const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
-        
+        const requiredFields = [
+          "first_name",
+          "last_name",
+          "email",
+          "phone_number",
+        ];
+        const missingFields = requiredFields.filter(
+          (field) => !formData[field as keyof typeof formData]
+        );
+
         if (missingFields.length > 0) {
           toast("Missing Information", {
-
             description: "Please fill in all required fields.",
-          }
-           );
+          });
           return;
         }
-        
-        toast( "Guest Checkout", {
+
+        toast("Guest Checkout", {
           description: "Proceeding as guest user.",
         });
         onNext();
-      } else if (authType === 'login') {
+      } else if (authType === "login") {
         // Validate login form
         if (!formData.email || !formData.password) {
           toast("Login Error", {
@@ -66,47 +74,55 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
           });
           return;
         }
-        
+
         // Simulate login API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        toast( "Login Successful", {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        toast("Login Successful", {
           description: "Welcome back! Continuing with your booking.",
         });
-        
+
         onAuthSuccess?.(formData);
         onNext();
-      } else if (authType === 'signup') {
+      } else if (authType === "signup") {
         // Validate signup form
-        const requiredFields = ['first_name', 'last_name', 'email', 'phone_number', 'password'];
-        const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
-        
+        const requiredFields = [
+          "first_name",
+          "last_name",
+          "email",
+          "phone_number",
+          "password",
+        ];
+        const missingFields = requiredFields.filter(
+          (field) => !formData[field as keyof typeof formData]
+        );
+
         if (missingFields.length > 0) {
-          toast( "Missing Information", {
+          toast("Missing Information", {
             description: "Please fill in all required fields.",
           });
           return;
         }
-        
+
         if (formData.password !== formData.confirmPassword) {
-          toast( "Password Mismatch",{
+          toast("Password Mismatch", {
             description: "Passwords do not match.",
           });
           return;
         }
-        
+
         // Simulate signup API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        toast("Account Created",{
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        toast("Account Created", {
           description: "Welcome! Your account has been created successfully.",
         });
-        
+
         onAuthSuccess?.(formData);
         onNext();
       }
     } catch (error) {
-      toast( "Error",{
+      toast("Error", {
         description: "Something went wrong. Please try again.",
       });
     } finally {
@@ -126,8 +142,8 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
         {/* Account Type Selection */}
         <div className="space-y-4">
           <Label>Choose an option</Label>
-          <RadioGroup 
-            value={authType} 
+          <RadioGroup
+            value={authType}
             onValueChange={(value) => setAuthType(value as typeof authType)}
             className="grid grid-cols-1 md:grid-cols-3 gap-4"
           >
@@ -163,7 +179,7 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
 
         {/* Dynamic Form Fields */}
         <div className="space-y-4">
-          {authType === 'guest' && (
+          {authType === "guest" && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -217,7 +233,12 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
                     id="gender"
                     name="gender"
                     value={formData.gender}
-                    onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        gender: e.target.value,
+                      }))
+                    }
                     className="w-full p-2 border rounded-md"
                   >
                     <option value="">Select gender</option>
@@ -238,7 +259,9 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="flight_number">Flight Number (if applicable)</Label>
+                <Label htmlFor="flight_number">
+                  Flight Number (if applicable)
+                </Label>
                 <Input
                   id="flight_number"
                   name="flight_number"
@@ -250,7 +273,7 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
             </>
           )}
 
-          {authType === 'login' && (
+          {authType === "login" && (
             <>
               <div className="space-y-2">
                 <Label htmlFor="email">Email *</Label>
@@ -275,14 +298,17 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
                 />
               </div>
               <div className="text-sm">
-                <a href="/forgot-password" className="text-primary hover:underline">
+                <a
+                  href="/forgot-password"
+                  className="text-primary hover:underline"
+                >
                   Forgot your password?
                 </a>
               </div>
             </>
           )}
 
-          {authType === 'signup' && (
+          {authType === "signup" && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -360,7 +386,12 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
                     id="gender"
                     name="gender"
                     value={formData.gender}
-                    onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        gender: e.target.value,
+                      }))
+                    }
                     className="w-full p-2 border rounded-md"
                   >
                     <option value="">Select gender</option>
@@ -381,7 +412,9 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="flight_number">Flight Number (if applicable)</Label>
+                <Label htmlFor="flight_number">
+                  Flight Number (if applicable)
+                </Label>
                 <Input
                   id="flight_number"
                   name="flight_number"
@@ -394,16 +427,21 @@ const AccountStep = ({ onNext, onAuthSuccess }: AccountStepProps) => {
           )}
         </div>
 
-        <Button 
-          onClick={handleSubmit} 
-          className="w-full"
-          disabled={isLoading}
-        >
-          {isLoading ? "Processing..." : 
-           authType === 'guest' ? "Continue as Guest" :
-           authType === 'login' ? "Sign In & Continue" :
-           "Create Account & Continue"}
+        <Button onClick={handleSubmit} className="w-full" disabled={isLoading}>
+          {isLoading
+            ? "Processing..."
+            : authType === "guest"
+            ? "Continue as Guest"
+            : authType === "login"
+            ? "Sign In & Continue"
+            : "Create Account & Continue"}
         </Button>
+        <div className="flex justify-between">
+          <Button variant="outline" onClick={handleBack}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

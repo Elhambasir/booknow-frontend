@@ -4,34 +4,31 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import AccountStep from "@/components/AccountStep";
 import { toast } from "sonner";
-import { useBookingStore } from "@/store/bookingStore";
 import BookingSummary from "./BookingSummary";
 import VehicleSelection from "./VehicleSelection";
 import Payment from "./Payment";
 import TripDetails from "./TripDetails";
 import { IPackage } from "@/types";
 import { DirectionMap } from "@/components/DirectionMap";
+import { useBookingStore } from "@/store/bookingStore";
 interface Props {
-    vehicles?: IPackage[]
+  vehicles?: IPackage[];
 }
-const Index = ({vehicles}: Props) => {
-  const {
-    booking,
-    setCurrentStep,
-  } = useBookingStore();
-  const [currentStep, setCurrentStepLocal] = useState(0);  
+const Index = ({ vehicles }: Props) => {
+  const { booking, currentStep, setCurrentStep } = useBookingStore();
+  // const [currentStep, setCurrentStepLocal] = useState(currentStep || 0);
 
   const steps = ["Trip Details", "Vehicle Selection", "Account", "Payment"];
   const handleBack = () => {
-      if (currentStep > 0) {
-        setCurrentStepLocal(currentStep - 1);
-        setCurrentStep(currentStep - 1);
-      }
-    };
+    if (currentStep > 0) {
+      // setCurrentStepLocal(currentStep - 1);
+      setCurrentStep(currentStep - 1);
+    }
+  };
   const handleNext = () => {
     if (
       currentStep === 0 &&
-      (!booking.from_location || !booking.to_location || !booking.date)
+      (!booking.from_location || !booking.to_location || !booking.date || (booking.type==='return'&&!booking.return_date))
     ) {
       toast("Missing Information", {
         description: "Please fill in all required trip details.",
@@ -40,7 +37,7 @@ const Index = ({vehicles}: Props) => {
     }
 
     if (currentStep < steps.length - 1) {
-      setCurrentStepLocal(currentStep + 1);
+      // setCurrentStepLocal(currentStep + 1);
       setCurrentStep(currentStep + 1);
     }
   };
@@ -114,28 +111,37 @@ const Index = ({vehicles}: Props) => {
             {/* Left Content */}
             <div className="space-y-6">
               {/* Trip Details Step */}
-              {currentStep === 0 && (
-               <TripDetails handleNext={handleNext} />
-              )}
+              {currentStep === 0 && <TripDetails handleNext={handleNext} />}
 
               {/* Vehicle Selection Step */}
               {currentStep === 1 && (
-                <VehicleSelection handleNext={handleNext} vehicles={vehicles} handleBack={handleBack} />
+                <VehicleSelection
+                  handleNext={handleNext}
+                  vehicles={vehicles}
+                  handleBack={handleBack}
+                />
               )}
 
               {/* Account Step */}
-              {currentStep === 2 && <AccountStep onNext={handleNext} />}
+              {currentStep === 2 && (
+                <AccountStep onNext={handleNext} handleBack={handleBack} />
+              )}
 
               {/* Payment Step */}
               {currentStep === 3 && (
-                <Payment setCurrentStepLocal={setCurrentStepLocal} handleBack={handleBack} />
+                <Payment
+                  handleBack={handleBack}
+                />
               )}
             </div>
 
             {/* Right Sidebar */}
             <div className="space-y-6">
               <BookingSummary />
-              <DirectionMap pickup={booking?.from_location!} dropoff={booking.to_location!} />
+              <DirectionMap
+                pickup={booking?.from_location!}
+                dropoff={booking.to_location!}
+              />
             </div>
           </div>
         </div>

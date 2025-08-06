@@ -7,18 +7,17 @@ import { useBookingStore } from "@/store/bookingStore";
 import { toast } from "sonner";
 
 interface Props {
-  setCurrentStepLocal: Dispatch<SetStateAction<number>>;
   handleBack: () => void;
 }
-export default function Payment({ setCurrentStepLocal, handleBack }: Props) {
-  const { getBookingSummary, clearBooking, currentStep, setCurrentStep } = useBookingStore();
+export default function Payment({ handleBack }: Props) {
+  const { booking, clearBooking, currentStep, setCurrentStep } = useBookingStore();
   
   const handlePayment = () => {
     toast("Payment Successful!", {
       description: "Your booking has been confirmed.",
     });
     clearBooking();
-    setCurrentStepLocal(0);
+    setCurrentStep(0);
   };
   return (
     <Card className="shadow-xl border-2 border-primary/20">
@@ -31,7 +30,7 @@ export default function Payment({ setCurrentStepLocal, handleBack }: Props) {
       <CardContent className="space-y-6">
         <div className="text-center space-y-4">
           <div className="text-4xl font-bold text-primary">
-            £{getBookingSummary().total}
+            £{booking.totalFare.toFixed()}
           </div>
           <Button onClick={handlePayment} size="lg" className="w-full">
             Pay with PayPal
