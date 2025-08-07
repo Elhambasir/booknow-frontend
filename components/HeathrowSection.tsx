@@ -28,7 +28,7 @@ const HeathrowSection = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <img
-          src={"lkhkjh"}
+          src={"/images/heathrow-airport-sm.png"}
           alt="Heathrow Airport Terminal"
           className="w-full h-full object-cover opacity-10"
         />

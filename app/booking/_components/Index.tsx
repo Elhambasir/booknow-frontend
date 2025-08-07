@@ -26,15 +26,16 @@ const Index = ({ vehicles }: Props) => {
     }
   };
   const handleNext = () => {
-    if (
-      currentStep === 0 &&
-      (!booking.from_location || !booking.to_location || !booking.date || (booking.type==='return'&&!booking.return_date))
-    ) {
-      toast("Missing Information", {
-        description: "Please fill in all required trip details.",
-      });
-      return;
-    }
+    // if (
+    //   currentStep === 0 &&
+    //   (!booking.from_location || !booking.to_location || !booking.date || (booking.type==='return'&&!booking.return_date))
+    // ) {
+    //   debugger;
+    //   toast("Missing Information", {
+    //     description: "Please fill in all required trip details.",
+    //   });
+    //   return;
+    // }
 
     if (currentStep < steps.length - 1) {
       // setCurrentStepLocal(currentStep + 1);

@@ -69,7 +69,7 @@ interface FullAddressResponse {
   geodistanceinmiles: number;
 }
 
-const API_KEY = "88c9f7fe-708d-47dd-bc24-8bc83dca0908";
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 
 interface SearchResult {
   Line: string;

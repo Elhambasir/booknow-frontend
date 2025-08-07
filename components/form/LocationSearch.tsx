@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Loader, X, MapPin } from 'lucide-react';
 import { findAirportTerminals, isAirportQuery, AirportTerminal } from '@/lib/airportDatabase';
-import { Location } from '@/types/booking';
-
-interface AddressSearchProps {
+import { Location } from '@/types';
+interface LocationSearchProps {
   onLocationSelect: (location: Location) => void;
   placeholder: string;
   selectedLocation: Location | null;
@@ -59,7 +58,7 @@ interface FullAddressResponse {
   geodistanceinmiles: number;
 }
 
-const API_KEY = '88c9f7fe-708d-47dd-bc24-8bc83dca0908';
+const API_KEY = process.env.GOOGLE_MAP_API_KEY;
 
 interface SearchResult {
   Line: string;
@@ -69,7 +68,7 @@ interface SearchResult {
   terminalData?: AirportTerminal;
 }
 
-export const AddressSearch: React.FC<AddressSearchProps> = ({
+export const LocationSearch: React.FC<LocationSearchProps> = ({
   onLocationSelect,
   placeholder,
   selectedLocation

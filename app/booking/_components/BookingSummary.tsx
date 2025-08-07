@@ -1,29 +1,14 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, MapPin } from "lucide-react";
+import { CheckCircle, MapPin, NavigationIcon } from "lucide-react";
 import React from "react";
 import { useBookingStore } from "@/store/bookingStore";
-const formatDate = (dateData: any) => {
-  // Create a Date object (month is zero-based in JS)
-  const dateObj = new Date(dateData.year, dateData.month - 1, dateData.day);
 
-  // Format as readable string
-  const formatted = dateObj.toLocaleDateString("en-US", {
-    weekday: "long", // e.g., Thursday
-    year: "numeric", // 2025
-    month: "long", // August
-    day: "numeric", // 14
-  });
-  return formatted;
-};
 export default function BookingSummary() {
   const booking = useBookingStore((state) => state.booking);
-  const currentStep = useBookingStore((state)=> state.currentStep);
+  const currentStep = useBookingStore((state) => state.currentStep);
   console.log("BOOKING SUMMARY", booking);
-  // const getBookingSummary = useBookingStore((state) => state.getBookingSummary);
-  // const summary = React.useMemo(() => {
-  //   return getBookingSummary();
-  // }, [booking]);
+  
   return (
     <Card className="shadow-xl border-2 border-primary/10 sticky top-6">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -51,7 +36,7 @@ export default function BookingSummary() {
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Date:</span>
                 <span>
-                  {formatDate(booking.date)} {booking.time}
+                  {new Date(booking.date!).toDateString()} {booking.time}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
@@ -64,15 +49,26 @@ export default function BookingSummary() {
                   <span>{booking.from_package.name}</span>
                 </div>
               )}
-              {booking.from_distance && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Distance:</span>
-                  <span>{booking.from_distance}</span>
+              {booking?.from_distance === undefined ||
+              booking?.from_duration === undefined ? (
+                <div className="flex items-center space-x-4 p-3 bg-primary/10 rounded-lg animate-pulse">
+                  <NavigationIcon className="h-5 w-5 text-primary" />
+                  <div className="h-4 w-full bg-gray-200 rounded"></div>
                 </div>
-              )}
+              ) : booking.from_distance != 0 && booking.from_duration != 0 ? (
+                <div className="flex items-center space-x-4 p-3 bg-primary/10 rounded-lg">
+                  <NavigationIcon className="h-5 w-5 text-primary" />
+                  <div className="text-sm">
+                    <span className="font-medium">Distance:</span>{" "}
+                    {booking.from_distance} miles •
+                    <span className="font-medium ml-2">Duration:</span>{" "}
+                    {booking.from_duration} minutes
+                  </div>
+                </div>
+              ) : null}
             </div>
 
-            {currentStep>1 && (
+            {currentStep > 1 && (
               <div className="border-t pt-4">
                 <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-4 rounded-xl">
                   <div className="flex justify-between items-center">

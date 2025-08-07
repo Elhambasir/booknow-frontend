@@ -1,11 +1,11 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { MapPin, NavigationIcon, Handshake, ArrowRight } from "lucide-react";
 import { useBookingStore } from "@/store/bookingStore";
 import { useLocationStore } from "@/store/useLocationStore";
 import { AddressSearch } from "@/components/AddressSearch";
-import CheckboxField from "./Checkbox";
+import CheckboxField from "@/components/form/CheckboxField";
 import RadioGroupField from "@/components/form/RadioGroupFields";
 import SelectField from "@/components/form/SelectField";
 import DatePickerField from "@/components/form/DatePickerField"; // using your provided one
@@ -19,14 +19,26 @@ import { tripDetailsSchema } from "@/lib/validationSchema";
 import { DevTool } from "@hookform/devtools";
 import { LocationService } from "@/services/locationService";
 import { toast } from "sonner";
+
 type TripDetailsFormValues = z.infer<typeof tripDetailsSchema>;
 
 interface Props {
   handleNext: () => void;
 }
+const getDistanceDuration = async (
+  origin: {
+    lat: number;
+    lng: number;
+  },
+  destination: { lat: number; lng: number }
+) => {
+  const locationService = new LocationService();
 
+  return await locationService.calculateDistance(origin, destination);
+};
 export default function TripDetails({ handleNext }: Props) {
   const { updateBooking, booking } = useBookingStore();
+  const [isPending, startTransition] = useTransition();
   const { pickup, setPickup, dropoff, setDropoff } = useLocationStore();
   const form = useForm<TripDetailsFormValues>({
     resolver: zodResolver(tripDetailsSchema),
@@ -45,59 +57,71 @@ export default function TripDetails({ handleNext }: Props) {
   });
 
   const onSubmit = async (values: TripDetailsFormValues) => {
-    console.log("SUBMITTED VALUES", values);
-    const locationService = new LocationService();
-    const { distance, duration } = await locationService.calculateDistance(
-      {
-        lat: pickup?.latitude!,
-        lng: pickup?.longitude!,
-      },
-      {
-        lat: dropoff?.latitude!,
-        lng: dropoff?.longitude!,
+    startTransition(async () => {
+      try {
+        const origin = {
+          lat: pickup?.latitude!,
+          lng: pickup?.longitude!,
+        };
+        const destination = {
+          lat: dropoff?.latitude!,
+          lng: dropoff?.longitude!,
+        };
+        const { distance, duration } = await getDistanceDuration(
+          origin,
+          destination
+        );
+        if (!distance || !duration) {
+          toast.error(
+            `Sorry, we couldn't calculate the distance and duration for your trip. Please try again later.`
+          );
+          return;
+        }
+        let airportFee = 0;
+        if (booking.from_location?.isAirport) {
+          airportFee = 10;
+        }
+        if (booking.to_location?.isAirport) {
+          airportFee += 10;
+        }
+        updateBooking({
+          ...booking,
+          type: values.type,
+          from_location: pickup,
+          to_location: dropoff,
+          from_distance: distance,
+          from_duration: duration,
+          date: values.date,
+          time: values.time,
+          passengers: Number(values.passengers),
+          return_date: values.return_date,
+          return_time: values.return_time,
+          return_distance: values.type === "return" ? distance : undefined,
+          return_duration: values.type === "return" ? duration : undefined,
+          child_seat: Number(values.child_seat) || 0,
+          meet_greet: values.meet_greet,
+          airport_fee: airportFee,
+        });
+        handleNext();
+      } catch (error) {
+        console.error("Something went wrong", error);
+        toast.error("Something went wrong");
       }
-    );
-
-    if (!distance || !duration) {
-      toast.error(
-        `Sorry, we couldn't calculate the distance and duration for your trip. Please try again later.`
-      );
-      return;
-    }
-    let airportFee = 0;
-    if (booking.from_location?.isAirport) {
-      airportFee = 10;
-    }
-    if (booking.to_location?.isAirport) {
-      airportFee += 10;
-    }
-    updateBooking({
-      ...booking,
-      type: values.type,
-      from_location: pickup,
-      to_location: dropoff,
-      from_distance: distance,
-      from_duration: duration,
-      date: values.date,
-      time: values.time,
-      passengers: Number(values.passengers),
-      return_date: values.return_date,
-      return_time: values.return_time,
-      return_distance: values.type === "return" ? distance : undefined,
-      return_duration: values.type === "return" ? duration : undefined,
-      child_seat: Number(values.child_seat) || 0,
-      meet_greet: values.meet_greet,
-      airport_fee: airportFee,
     });
-    handleNext();
   };
-  console.log("form errors", form.formState.errors);
+
   useEffect(() => {
+    // Update form values when locations change
     if (pickup) {
-      form.setValue("from_location", pickup.address);
+      form.setValue("from_location", pickup.address, { shouldValidate: true });
+    } else {
+      form.setValue("from_location", "", { shouldValidate: true });
     }
+
     if (dropoff) {
-      form.setValue("to_location", dropoff.address);
+      form.setValue("to_location", dropoff.address, { shouldValidate: true });
+    } else {
+      form.setValue("to_location", "", { shouldValidate: true });
     }
   }, [pickup, dropoff]);
 
@@ -151,8 +175,27 @@ export default function TripDetails({ handleNext }: Props) {
                   selectedLocation={pickup}
                   type="pickup"
                   isRequired={true}
-                  onLocationSelect={(location) => {
+                  onLocationSelect={async (location) => {
                     setPickup(location);
+                    let data = undefined;
+                    if (location&&dropoff) {
+                      data = await getDistanceDuration(
+                        {
+                          lat: location?.latitude!,
+                          lng: location?.longitude!,
+                        },
+                        {
+                          lat: dropoff?.latitude!,
+                          lng: dropoff?.longitude!,
+                        }
+                      );
+                    }
+                    updateBooking({
+                      ...booking,
+                      from_location: location,
+                      from_distance: data?.distance,
+                      from_duration: data?.duration,
+                    });
                     form.setValue("from_location", location.address, {
                       shouldValidate: true,
                     });
@@ -171,8 +214,27 @@ export default function TripDetails({ handleNext }: Props) {
                   placeholder="Dropoff address or postcode"
                   selectedLocation={dropoff}
                   type="dropoff"
-                  onLocationSelect={(location) => {
+                  onLocationSelect={async (location) => {
                     setDropoff(location);
+                    let data = undefined;
+                    if (pickup && location) {
+                      data = await getDistanceDuration(
+                        {
+                          lat: pickup?.latitude!,
+                          lng: pickup?.longitude!,
+                        },
+                        {
+                          lat: location?.latitude!,
+                          lng: location?.longitude!,
+                        }
+                      );
+                    }
+                    updateBooking({
+                      ...booking,
+                      to_location: location,
+                      from_distance: data?.distance,
+                      from_duration: data?.duration,
+                    });
                     form.setValue("to_location", location.address, {
                       shouldValidate: true,
                     });
@@ -243,40 +305,29 @@ export default function TripDetails({ handleNext }: Props) {
               <h3 className="font-medium">Additional Options</h3>
               <div className="flex items-center space-x-2 pt-2">
                 <CheckboxField
+                  name="meet_greet"
                   label="Meet & Greet Service (+£10)"
+                  subLabel="(optional)"
                   description="Choose this if you want"
-                  isChecked={form.watch("meet_greet") ?? false}
-                  onChange={(checked) => form.setValue("meet_greet", checked)}
                   icon={<Handshake />}
                 />
               </div>
             </div>
-
-            {/* Distance / Duration */}
-            {booking?.from_distance && booking?.from_duration && (
-              <div className="flex items-center space-x-4 p-3 bg-primary/10 rounded-lg">
-                <NavigationIcon className="h-5 w-5 text-primary" />
-                <div className="text-sm">
-                  <span className="font-medium">Distance:</span>{" "}
-                  {booking.from_distance} •
-                  <span className="font-medium ml-2">Duration:</span>{" "}
-                  {booking.from_duration}
-                </div>
-              </div>
-            )}
-
             <Button
               type="submit"
               disabled={
+                isPending ||
                 !pickup ||
                 !dropoff ||
+                !form.watch("from_location") ||
+                !form.watch("to_location") ||
                 !form.watch("date") ||
                 !form.watch("time")
               }
               className="w-full"
               size="lg"
             >
-              Continue to Vehicle Selection
+              {isPending ? "Saving..." : "Save"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </form>

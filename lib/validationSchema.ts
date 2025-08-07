@@ -47,7 +47,15 @@ export const locationSchema = z.object({
   state: z.string().min(1, "State is required"),
   country: z.string().min(1, "Country is required"),
 });
-
+export const tripSchema = z.object({
+  type: z.enum(["one way", "return"]).refine((val) => !!val, {
+    message: "Trip type is required",
+  }),
+  from_location: z.string(),
+  to_location: z.string(),
+  date: z.any(),
+  time: z.string().min(1, "Pickup time is required"),
+});
 export const tripDetailsSchema = z.object({
   type: z.enum(["one way", "return"]).refine((val) => !!val, {
     message: "Trip type is required",
