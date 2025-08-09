@@ -5,7 +5,7 @@
  * @type {string[]}
  *
  */
-export const publicRoutes = ["/","/about-us","/","/contact-us","/blog", "/offers","/finalize","/payment","/thank-you"];
+export const publicRoutes = ["/","/booking","/blog","/airports","/about-us","/","/contact-us","/blog", "/offers","/finalize","/payment","/thank-you"];
 
 /**
  * Auth Routes: Are array of paths that used for authentication purposes
@@ -27,7 +27,7 @@ export const authRoutes = [
  * @type {string}
  */
 export const apiAuthPrefix = "/api/auth";
-export const privateRoutes = ["/booking", "/profile"];
+export const privateRoutes = ["/profile"];
 /**
  * The default redirect path after logging in
  * @type {string}
