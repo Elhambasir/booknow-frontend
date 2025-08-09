@@ -1,9 +1,7 @@
 "use client";
-import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import AccountStep from "@/components/AccountStep";
-import { toast } from "sonner";
+import AccountStep from "@/app/booking/_components/AccountStep";
 import BookingSummary from "./BookingSummary";
 import VehicleSelection from "./VehicleSelection";
 import Payment from "./Payment";
@@ -11,17 +9,20 @@ import TripDetails from "./TripDetails";
 import { IPackage } from "@/types";
 import { DirectionMap } from "@/components/DirectionMap";
 import { useBookingStore } from "@/store/bookingStore";
+import { useSession } from "next-auth/react";
 interface Props {
   vehicles?: IPackage[];
 }
 const Index = ({ vehicles }: Props) => {
   const { booking, currentStep, setCurrentStep } = useBookingStore();
-  // const [currentStep, setCurrentStepLocal] = useState(currentStep || 0);
-
+  const { data: session } = useSession();
   const steps = ["Trip Details", "Vehicle Selection", "Account", "Payment"];
   const handleBack = () => {
     if (currentStep > 0) {
-      // setCurrentStepLocal(currentStep - 1);
+      if (currentStep === 3 && session?.user) {
+        setCurrentStep(currentStep - 2);
+        return;
+      }
       setCurrentStep(currentStep - 1);
     }
   };
@@ -38,7 +39,10 @@ const Index = ({ vehicles }: Props) => {
     // }
 
     if (currentStep < steps.length - 1) {
-      // setCurrentStepLocal(currentStep + 1);
+      if (currentStep === 1 && session?.user) {
+        setCurrentStep(currentStep + 2);
+        return;
+      }
       setCurrentStep(currentStep + 1);
     }
   };
@@ -129,11 +133,7 @@ const Index = ({ vehicles }: Props) => {
               )}
 
               {/* Payment Step */}
-              {currentStep === 3 && (
-                <Payment
-                  handleBack={handleBack}
-                />
-              )}
+              {currentStep === 3 && <Payment handleBack={handleBack} />}
             </div>
 
             {/* Right Sidebar */}

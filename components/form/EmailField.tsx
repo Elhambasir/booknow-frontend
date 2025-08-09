@@ -15,10 +15,16 @@ import {
 type Props = {
   name: string;
   label: string;
+  isRequired?: boolean;
   placeholder?: string;
 };
 
-export default function EmailField({ name, label, placeholder }: Props) {
+export default function EmailField({
+  name,
+  label,
+  isRequired = false,
+  placeholder,
+}: Props) {
   const form = useFormContext();
   return (
     <FormField
@@ -27,7 +33,7 @@ export default function EmailField({ name, label, placeholder }: Props) {
       render={({ field }) => (
         <FormItem>
           <FormLabel>
-            <Label>{label}</Label>
+            {label} {isRequired && <span className="text-red-500">*</span>}{" "}
           </FormLabel>
           <FormControl>
             <div className="space-y-2">
