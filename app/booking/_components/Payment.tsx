@@ -2,23 +2,24 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, CreditCard } from "lucide-react";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useState } from "react";
 import { useBookingStore } from "@/store/bookingStore";
-import { toast } from "sonner";
-
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import PaypalPayment from "@/components/paypal";
+import { useRouter } from "next/navigation";
 interface Props {
   handleBack: () => void;
 }
 export default function Payment({ handleBack }: Props) {
-  const { booking, clearBooking, currentStep, setCurrentStep } = useBookingStore();
-  
-  const handlePayment = () => {
-    toast("Payment Successful!", {
-      description: "Your booking has been confirmed.",
-    });
-    clearBooking();
-    setCurrentStep(0);
-  };
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const { booking, updateBooking } =
+    useBookingStore();
+  const router = useRouter();
+  const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+  if (!paypalClientId) {
+    throw new Error("PayPal Client ID is missing from environment variables");
+  }
   return (
     <Card className="shadow-xl border-2 border-primary/20">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -30,11 +31,30 @@ export default function Payment({ handleBack }: Props) {
       <CardContent className="space-y-6">
         <div className="text-center space-y-4">
           <div className="text-4xl font-bold text-primary">
-            £{booking.totalFare.toFixed()}
+            £{booking.totalFare.toFixed(2)}
           </div>
-          <Button onClick={handlePayment} size="lg" className="w-full">
-            Pay with PayPal
-          </Button>
+          <PayPalScriptProvider
+            options={{ clientId: paypalClientId, currency: "GBP" }}
+          >
+            <div className={`bg-white rounded-lg px-3 py-4 my-10`}>
+              {/* PayPal Payment */}
+              {booking && (
+                <PaypalPayment
+                  onOrderCreate={() => {}}
+                  details={booking}
+                  onComplete={(res) => {
+                    if (res?.success) {
+                      const book = res.data?.booking?.bookings?.at(-1);
+                      if (book?.id) updateBooking({ id: book.id });
+                    }
+                    setMsg(null);
+                    router.push("/thank-you");
+                  }}
+                  setMsg={setMsg}
+                />
+              )}
+            </div>
+          </PayPalScriptProvider>
           <p className="text-sm text-muted-foreground">
             Secure payment powered by PayPal
           </p>

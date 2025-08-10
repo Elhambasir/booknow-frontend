@@ -13,13 +13,14 @@ import { useSession } from "next-auth/react";
 interface Props {
   vehicles?: IPackage[];
 }
+
 const Index = ({ vehicles }: Props) => {
   const { booking, currentStep, setCurrentStep } = useBookingStore();
   const { data: session } = useSession();
   const steps = ["Trip Details", "Vehicle Selection", "Account", "Payment"];
   const handleBack = () => {
     if (currentStep > 0) {
-      if (currentStep === 3 && session?.user) {
+      if (currentStep === 3 && isUser()) {
         setCurrentStep(currentStep - 2);
         return;
       }
@@ -27,26 +28,19 @@ const Index = ({ vehicles }: Props) => {
     }
   };
   const handleNext = () => {
-    // if (
-    //   currentStep === 0 &&
-    //   (!booking.from_location || !booking.to_location || !booking.date || (booking.type==='return'&&!booking.return_date))
-    // ) {
-    //   debugger;
-    //   toast("Missing Information", {
-    //     description: "Please fill in all required trip details.",
-    //   });
-    //   return;
-    // }
-
     if (currentStep < steps.length - 1) {
-      if (currentStep === 1 && session?.user) {
+      if (currentStep === 1 && isUser()) {
         setCurrentStep(currentStep + 2);
         return;
       }
       setCurrentStep(currentStep + 1);
     }
   };
-
+  const isUser = () => {
+    if (session?.user) return true;
+    if (booking.user?.email) return true;
+    return false;
+  };
   return (
     <div className="min-h-screen bg-background">
       <Navigation />

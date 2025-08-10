@@ -34,6 +34,7 @@ const initialBooking: IBooking = {
   from_distance: 0,
   from_duration: 0,
   from_amount: 0,
+  totalFare: 0,
   from_package: undefined,
 };
 
