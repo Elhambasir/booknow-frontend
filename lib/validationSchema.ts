@@ -64,7 +64,7 @@ export const tripDetailsSchema = z.object({
   to_location: z.string(),
   date: z.any(),
   time: z.string().min(1, "Pickup time is required"),
-  passengers: z.string({error: "Number is required"}),
+  passengers: z.string({ error: "Number is required" }),
   return_date: z.any().optional(),
   return_time: z.string().optional(),
   child_seat: z.string().min(0).optional(),
@@ -191,29 +191,27 @@ export const tripDetailsSchema = z.object({
 //     }
 //   )
 
-// export const IGuestSchema = z.object({
-//   username: z.string().optional(),
-//   gender: z.string().optional(),
-//   birth_date: z.string().optional(),
-//   phone_number: z
-//     .string()
-//     .regex(/^\+?[1-9]\d{1,14}$/, { message: 'Invalid phone number format' }),
-//   flight_number: z.string(),
-//   email: z.string().email(),
-//   first_name: z.string().min(3),
-//   last_name: z.string().min(3),
-// })
+export const GuestSchema = z.object({
+  username: z.string(),
+  gender: z.string(),
+  birth_date: z.date(),
+  phone_number: z.string(),
+  flight_number: z.string(),
+  email: z.email(),
+  first_name: z.string().min(3),
+  last_name: z.string().min(3),
+});
 
-// export const IUserProfileSchema = z.object({
-//   first_name: z.string().min(3),
-//   last_name: z.string().min(3),
-//   email: z.string().email(),
-//   phone_number: z
-//     .string()
-//     .regex(/^\+?[1-9]\d{1,14}$/, { message: 'Invalid phone number format' }),
-//   gender: z.string(),
-//   birth_date: z.string()
-// })
+export const UserRegisterSchema = z.object({
+  first_name: z.string().min(3),
+  last_name: z.string().min(3),
+  email: z.string().email(),
+  phone_number: z
+    .string()
+    .regex(/^\+?[1-9]\d{1,14}$/, { message: 'Invalid phone number format' }),
+  gender: z.string(),
+  birth_date: z.string()
+})
 
 export const RegisterSchema = z
   .object({

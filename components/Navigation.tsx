@@ -11,13 +11,11 @@ import {
 import { Menu, X, Phone, User, LogOut, Settings } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import UserAvatar from "./UserAvatar";
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
-  const router = useRouter();
   const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
@@ -38,7 +36,7 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <div className="text-2xl font-bold">
-              <span className="text-primary">Airport</span>
+              <span className="text-primary">G&M</span>
               <span className="text-secondary">Taxi</span>
             </div>
           </div>

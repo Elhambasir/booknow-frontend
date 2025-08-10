@@ -7,7 +7,6 @@ import { useBookingStore } from "@/store/bookingStore";
 export default function BookingSummary() {
   const booking = useBookingStore((state) => state.booking);
   const currentStep = useBookingStore((state) => state.currentStep);
-  console.log("BOOKING SUMMARY", booking);
   
   return (
     <Card className="shadow-xl border-2 border-primary/10 sticky top-6">
@@ -74,7 +73,7 @@ export default function BookingSummary() {
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">Total Fare:</span>
                     <span className="text-2xl font-bold text-primary">
-                      £{booking.totalFare?.toFixed()}
+                      £{booking.totalFare?.toFixed(2)}
                     </span>
                   </div>
                   {booking.type === "return" && (

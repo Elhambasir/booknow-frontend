@@ -3,7 +3,6 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Phone } from "lucide-react";
 import React, { forwardRef, type InputHTMLAttributes } from "react";
@@ -21,13 +20,14 @@ import { useFormContext } from "react-hook-form";
 type Props = {
   name: string;
   label: string;
-
+  isRequired?: boolean;
   placeholder?: string;
 };
 
 export default function PhoneNumberField({
   name,
   label,
+  isRequired = false,
   placeholder = "790909090",
 }: Props) {
   const form = useFormContext();
@@ -38,7 +38,7 @@ export default function PhoneNumberField({
       render={({ field }) => (
         <FormItem>
           <FormLabel>
-            <Label>{label}</Label>
+            {label} {isRequired && <span className="text-red-500">*</span>}
           </FormLabel>
           <FormControl>
             <div dir="ltr">

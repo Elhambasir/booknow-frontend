@@ -2,98 +2,103 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Luggage, Star, ArrowRight } from "lucide-react";
+import { IPackage } from "@/types";
+interface Props {
+  vehicles?: IPackage[]
+}
+const FleetSection = ({ vehicles }: Props) => {
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const FleetSection = () => {
-  const vehicles = [
-    {
-      id: 1,
-      name: "Executive Sedan",
-      brand: "Mercedes-Benz E-Class",
-      image: "images/luxury-sedan.jpg",
-      passengers: 3,
-      luggage: 2,
-      features: ["Premium Comfort", "Business Class", "WiFi Available"],
-      popular: false,
-      priceOptions: {
-        perMin: 0.75,
-        baseFare: 15,
-        commission: 35.55,
-        distanceBands: [
-          { rate: 2.8, limit: 5 },
-          { rate: 2.2, limit: 15 },
-          { rate: 1.8, limit: 30 },
-          { rate: 1.5, limit: "Infinity" }
-        ],
-        airportSurcharge: 8
-      }
-    },
-    {
-      id: 2,
-      name: "Luxury SUV",
-      brand: "BMW X5 / Audi Q7",
-      image: "images/luxury-suv.jpg",
-      passengers: 6,
-      luggage: 4,
-      features: ["Family Friendly", "Extra Space", "Premium Audio"],
-      popular: true,
-      priceOptions: {
-        perMin: 0.95,
-        baseFare: 20,
-        commission: 45.55,
-        distanceBands: [
-          { rate: 3.5, limit: 5 },
-          { rate: 2.8, limit: 15 },
-          { rate: 2.3, limit: 30 },
-          { rate: 1.9, limit: "Infinity" }
-        ],
-        airportSurcharge: 12
-      }
-    },
-    {
-      id: 3,
-      name: "Executive Van",
-      brand: "Mercedes-Benz V-Class",
-      image: "images/luxury-suv.jpg",
-      passengers: 8,
-      luggage: 6,
-      features: ["Group Travel", "Maximum Comfort", "Conference Setup"],
-      popular: false,
-      priceOptions: {
-        perMin: 1.25,
-        baseFare: 25,
-        commission: 55.55,
-        distanceBands: [
-          { rate: 4.2, limit: 5 },
-          { rate: 3.5, limit: 15 },
-          { rate: 2.8, limit: 30 },
-          { rate: 2.2, limit: "Infinity" }
-        ],
-        airportSurcharge: 15
-      }
-    },
-    {
-      id: 4,
-      name: "Premium Minibus",
-      brand: "Mercedes-Benz Sprinter",
-      image: "images/executive-van.jpg",
-      passengers: 16,
-      luggage: 10,
-      features: ["Large Groups", "Airport Transfers", "Corporate Events"],
-      popular: false,
-      priceOptions: {
-        perMin: 1.85,
-        baseFare: 35,
-        commission: 75.55,
-        distanceBands: [
-          { rate: 5.5, limit: 5 },
-          { rate: 4.5, limit: 15 },
-          { rate: 3.8, limit: 30 },
-          { rate: 3.2, limit: "Infinity" }
-        ],
-        airportSurcharge: 20
-      }
-    },
-  ];
+  // const vehicles = [
+  //   {
+  //     id: 1,
+  //     name: "Executive Sedan",
+  //     brand: "Mercedes-Benz E-Class",
+  //     image: "images/luxury-sedan.jpg",
+  //     passengers: 3,
+  //     luggage: 2,
+  //     features: ["Premium Comfort", "Business Class", "WiFi Available"],
+  //     popular: false,
+  //     priceOptions: {
+  //       perMin: 0.75,
+  //       baseFare: 15,
+  //       commission: 35.55,
+  //       distanceBands: [
+  //         { rate: 2.8, limit: 5 },
+  //         { rate: 2.2, limit: 15 },
+  //         { rate: 1.8, limit: 30 },
+  //         { rate: 1.5, limit: "Infinity" }
+  //       ],
+  //       airportSurcharge: 8
+  //     }
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Luxury SUV",
+  //     brand: "BMW X5 / Audi Q7",
+  //     image: "images/luxury-suv.jpg",
+  //     passengers: 6,
+  //     luggage: 4,
+  //     features: ["Family Friendly", "Extra Space", "Premium Audio"],
+  //     popular: true,
+  //     priceOptions: {
+  //       perMin: 0.95,
+  //       baseFare: 20,
+  //       commission: 45.55,
+  //       distanceBands: [
+  //         { rate: 3.5, limit: 5 },
+  //         { rate: 2.8, limit: 15 },
+  //         { rate: 2.3, limit: 30 },
+  //         { rate: 1.9, limit: "Infinity" }
+  //       ],
+  //       airportSurcharge: 12
+  //     }
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Executive Van",
+  //     brand: "Mercedes-Benz V-Class",
+  //     image: "images/luxury-suv.jpg",
+  //     passengers: 8,
+  //     luggage: 6,
+  //     features: ["Group Travel", "Maximum Comfort", "Conference Setup"],
+  //     popular: false,
+  //     priceOptions: {
+  //       perMin: 1.25,
+  //       baseFare: 25,
+  //       commission: 55.55,
+  //       distanceBands: [
+  //         { rate: 4.2, limit: 5 },
+  //         { rate: 3.5, limit: 15 },
+  //         { rate: 2.8, limit: 30 },
+  //         { rate: 2.2, limit: "Infinity" }
+  //       ],
+  //       airportSurcharge: 15
+  //     }
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Premium Minibus",
+  //     brand: "Mercedes-Benz Sprinter",
+  //     image: "images/executive-van.jpg",
+  //     passengers: 16,
+  //     luggage: 10,
+  //     features: ["Large Groups", "Airport Transfers", "Corporate Events"],
+  //     popular: false,
+  //     priceOptions: {
+  //       perMin: 1.85,
+  //       baseFare: 35,
+  //       commission: 75.55,
+  //       distanceBands: [
+  //         { rate: 5.5, limit: 5 },
+  //         { rate: 4.5, limit: 15 },
+  //         { rate: 3.8, limit: 30 },
+  //         { rate: 3.2, limit: "Infinity" }
+  //       ],
+  //       airportSurcharge: 20
+  //     }
+  //   },
+  // ];
 
   return (
     <section id="fleet" className="py-20 bg-muted/30">
@@ -117,14 +122,14 @@ const FleetSection = () => {
 
         {/* Vehicle Grid */}
         <div className="grid lg:grid-cols-3 gap-8">
-          {vehicles.map((vehicle) => (
+          {vehicles?.map((vehicle) => (
             <Card
               key={vehicle.id}
               className={`group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 bg-background overflow-hidden ${
-                vehicle.popular ? 'ring-2 ring-secondary' : ''
+                vehicle.order===1 ? 'ring-2 ring-secondary' : ''
               }`}
             >
-              {vehicle.popular && (
+              {vehicle.order===1 && (
                 <div className="bg-secondary text-primary text-center py-2 text-sm font-medium">
                   Most Popular
                 </div>
@@ -132,20 +137,20 @@ const FleetSection = () => {
               
               <div className="relative overflow-hidden">
                 <img
-                  src={vehicle.image}
+                  src={`${BASE_URL}${vehicle.image?.url}`}
                   alt={vehicle.name}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-4 right-4">
                   <Badge variant="secondary" className="bg-background/90 text-primary">
-                    £{vehicle.priceOptions.distanceBands[0].rate}/mile
+                    £{vehicle.price_options.distanceBands[0].rate}/mile
                   </Badge>
                 </div>
               </div>
 
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl text-primary">{vehicle.name}</CardTitle>
-                <p className="text-muted-foreground">{vehicle.brand}</p>
+                <p className="text-muted-foreground">{vehicle.type}</p>
               </CardHeader>
 
               <CardContent className="space-y-6">
@@ -153,16 +158,16 @@ const FleetSection = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
                     <Users className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">Up to {vehicle.passengers} passengers</span>
+                    <span className="text-sm">Up to {vehicle.num_of_passengers} passengers</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Luggage className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{vehicle.luggage} large bags</span>
+                    <span className="text-sm">{vehicle.num_of_big_suits} large bags</span>
                   </div>
                 </div>
 
                 {/* Features */}
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <p className="text-sm font-medium text-primary">Features:</p>
                   <div className="flex flex-wrap gap-2">
                     {vehicle.features.map((feature, index) => (
@@ -171,27 +176,27 @@ const FleetSection = () => {
                       </Badge>
                     ))}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Price Display */}
                 <div className="bg-muted/50 rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-2xl font-bold text-primary">
-                        £{vehicle.priceOptions.distanceBands[0].rate}
+                        £{vehicle.price_options.distanceBands[0].rate}
                       </div>
                       <div className="text-sm text-muted-foreground">per mile from</div>
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-muted-foreground">Base fare</div>
-                      <div className="text-lg font-semibold text-secondary">£{vehicle.priceOptions.baseFare}</div>
+                      <div className="text-lg font-semibold text-secondary">£{vehicle.price_options.baseFare}</div>
                     </div>
                   </div>
                 </div>
 
                 {/* CTA Button */}
                 <Button 
-                  variant={vehicle.popular ? "hero" : "outline"} 
+                  variant={vehicle.order===1 ? "hero" : "outline"} 
                   className="w-full"
                 >
                   Book This Vehicle
