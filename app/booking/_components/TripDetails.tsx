@@ -16,7 +16,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { tripDetailsSchema } from "@/lib/validationSchema";
-import { DevTool } from "@hookform/devtools";
 import { LocationService } from "@/services/locationService";
 import { toast } from "sonner";
 
@@ -331,7 +330,6 @@ export default function TripDetails({ handleNext }: Props) {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </form>
-          <DevTool control={form.control} />
         </Form>
       </CardContent>
     </Card>

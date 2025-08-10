@@ -16,6 +16,7 @@ export default function VehicleSelection({
   vehicles,
   handleBack,
 }: Props) {
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
   const { booking, updateBooking } = useBookingStore();
   const { type, from_distance, from_duration, meet_greet, child_seat } =
   booking;
@@ -77,7 +78,7 @@ export default function VehicleSelection({
                   <div className="grid sm:grid-cols-4 gap-4 sm:gap-6">
                     <div className="sm:col-span-2">
                       <img
-                        src={`https://booknowapi.gmdirecthire.co.uk${vehicle?.image?.url}`}
+                        src={`${BASE_URL}${vehicle?.image?.url}`}
                         alt={vehicle.name}
                         className="w-full h-32 object-cover rounded mb-4"
                       />

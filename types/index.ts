@@ -42,6 +42,7 @@ export type IPackage = {
   publishedAt: string;
   documentId: string;
   image?: Image;
+  order: number;
   price_options: {
     baseFare: number;
     perMin: number;

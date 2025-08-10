@@ -9,7 +9,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GuestSchema } from "@/lib/validationSchema";
-import { DevTool } from "@hookform/devtools";
 import { toast } from "sonner";
 import TextField from "@/components/form/TextField";
 import EmailField from "@/components/form/EmailField";
@@ -173,7 +172,6 @@ export default function Guest({ handleNext }: Props) {
         >
           {isPending ? "Saving..." : "Continue as Guest"}
         </Button>
-        <DevTool control={form.control} />
       </form>
     </Form>
   );

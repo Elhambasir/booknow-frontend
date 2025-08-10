@@ -45,7 +45,7 @@ export default function Payment({ handleBack }: Props) {
                   onComplete={(res) => {
                     if (res?.success) {
                       const book = res.data?.booking?.bookings?.at(-1);
-                      if (book?.id) updateBooking({ id: book.id });
+                      if (book?.id) updateBooking({ ...booking, id: book.id });
                     }
                     setMsg(null);
                     router.push("/thank-you");

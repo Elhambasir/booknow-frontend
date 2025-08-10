@@ -8,20 +8,22 @@ import HeroSectionWithMap from "@/components/HeroSectionWithMap";
 import NewsletterSection from "@/components/NewsletterSection";
 import ServicesSection from "@/components/ServiceSection";
 import TestimonialsSection from "@/components/TestimonialSection";
+import { getPackages } from "@/services/packageService";
+export default async function Home() {
+  const vehicles = await getPackages();
 
-export default function Home() {
   return (
-<div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <HeroSectionWithMap />
       <ServicesSection />
       <HeathrowSection />
-      <FleetSection />
+      <FleetSection vehicles={vehicles?.data} />
       <TestimonialsSection />
       <DriversSection />
       <BlogSection />
       <FAQSection />
       <NewsletterSection />
-      <Footer />  
+      <Footer />
     </div>
   );
 }

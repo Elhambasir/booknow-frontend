@@ -1,7 +1,7 @@
 import React from 'react'
-
+import Thankyou from './_components/Thankyou'
 export default function page() {
   return (
-    <div>Thank you.</div>
+    <Thankyou />
   )
 }
