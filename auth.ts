@@ -15,16 +15,17 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider !== "credentials") return true;
-      if(user.id) {
+      if (user.id) {
         const existingUser = await getUserById(user.id);
-        if(!existingUser || !existingUser.confirmed) {
+        if (!existingUser || !existingUser.confirmed) {
           return false;
         }
       }
       return true;
     },
     async session({ token, session }) {
-      if(token) {
+
+      if (token) {
         session.user.id = token.sub;
         session.user.first_name = token.first_name;
         session.user.last_name = token.last_name;

@@ -20,7 +20,6 @@ export default function VehicleSelection({
   const { booking, updateBooking } = useBookingStore();
   const { type, from_distance, from_duration, meet_greet, child_seat } =
   booking;
-  console.log("VEHICLES", booking);
   const handleVehicleSelect = (
     vehicle: IPackage,
     vehiclePrice: {

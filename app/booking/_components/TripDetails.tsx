@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useTransition } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { MapPin, NavigationIcon, Handshake, ArrowRight } from "lucide-react";
+import { MapPin, Handshake, ArrowRight } from "lucide-react";
 import { useBookingStore } from "@/store/bookingStore";
 import { useLocationStore } from "@/store/useLocationStore";
 import { AddressSearch } from "@/components/AddressSearch";
