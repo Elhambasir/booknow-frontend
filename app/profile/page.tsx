@@ -1,11 +1,26 @@
-'use client'
-import { useState } from "react";
+"use client";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+const UserProfileFormSchem = z.object({
+  first_name: z.string(),
+  last_name: z.string(),
+  email: z.email(),
+  phone_number: z.string(),
+  gender: z.string(),
+  address: z.string(),
+  birth_date: z.date(),
+  city: z.string(),
+  postcode: z.string(),
+});
 import {
   Select,
   SelectContent,
@@ -38,8 +53,16 @@ import {
   Eye,
 } from "lucide-react";
 import { toast } from "sonner";
-
+import { useSearchParams } from "next/navigation";
+import TextField from "@/components/form/TextField";
+import EmailField from "@/components/form/EmailField";
+import PhoneNumberField from "@/components/form/PhoneNumberField";
+import SelectField from "@/components/form/SelectField";
+import TextareaField from "@/components/form/TextareaField";
 const Profile = () => {
+  const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const defaultActiveTab = searchParams.get("tab");
   const [profileData, setProfileData] = useState({
     first_name: "John",
     last_name: "Doe",
@@ -54,15 +77,46 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [bookingFilter, setBookingFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof UserProfileFormSchem>>({
+    resolver: zodResolver(UserProfileFormSchem),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+    },
+  });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setProfileData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof UserProfileFormSchem>) {
+    startTransition(async () => {
+      try {
+        toast.success("Submitted Data", {
+          description: JSON.stringify(values),
+        });
+      } catch (error: any) {
+        console.error("Signup error", error);
+        if (error.response && error.response.status === 400) {
+          // Try to extract a more specific error message if available
+          const apiMessage = error.response.data?.message;
+          if (
+            Array.isArray(apiMessage) &&
+            apiMessage[0]?.messages?.[0]?.message
+          ) {
+            toast.error(apiMessage[0].messages[0].message);
+          } else if (typeof apiMessage === "string") {
+            toast.error(apiMessage);
+          } else {
+            toast.error("Invalid input or user already exists.");
+          }
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
+        console.error("error", error);
+        return;
+      }
+    });
+  }
 
   const handleSave = () => {
     // Simulate API call
@@ -167,8 +221,6 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <Navigation />
-
       {/* Enhanced Hero Section */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-[var(--gradient-hero)]" />
@@ -222,7 +274,10 @@ const Profile = () => {
       <section className="py-12 -mt-6">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <Tabs defaultValue="profile" className="space-y-8">
+            <Tabs
+              defaultValue={defaultActiveTab ?? "profile"}
+              className="space-y-8"
+            >
               <TabsList className="grid w-full grid-cols-4 h-12 bg-card/50 backdrop-blur-sm border shadow-lg">
                 <TabsTrigger
                   value="profile"
@@ -281,185 +336,127 @@ const Profile = () => {
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-6">
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="first_name"
-                              className="text-sm font-medium"
-                            >
-                              First Name
-                            </Label>
-                            <Input
-                              id="first_name"
-                              name="first_name"
-                              value={profileData.first_name}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="transition-all duration-200"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="last_name"
-                              className="text-sm font-medium"
-                            >
-                              Last Name
-                            </Label>
-                            <Input
-                              id="last_name"
-                              name="last_name"
-                              value={profileData.last_name}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="transition-all duration-200"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="email"
-                              className="text-sm font-medium flex items-center"
-                            >
-                              <Mail className="h-4 w-4 mr-2 text-primary" />
-                              Email
-                            </Label>
-                            <Input
-                              id="email"
-                              name="email"
-                              type="email"
-                              value={profileData.email}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="transition-all duration-200"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="phone_number"
-                              className="text-sm font-medium flex items-center"
-                            >
-                              <Phone className="h-4 w-4 mr-2 text-primary" />
-                              Phone Number
-                            </Label>
-                            <Input
-                              id="phone_number"
-                              name="phone_number"
-                              value={profileData.phone_number}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="transition-all duration-200"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="gender"
-                              className="text-sm font-medium"
-                            >
-                              Gender
-                            </Label>
-                            {isEditing ? (
-                              <Select
-                                value={profileData.gender}
-                                onValueChange={(value) =>
-                                  setProfileData((prev) => ({
-                                    ...prev,
-                                    gender: value,
-                                  }))
-                                }
-                              >
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="male">Male</SelectItem>
-                                  <SelectItem value="female">Female</SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            ) : (
-                              <Input
-                                value={profileData.gender}
-                                disabled
-                                className="capitalize"
-                              />
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="birth_date"
-                              className="text-sm font-medium"
-                            >
-                              Date of Birth
-                            </Label>
-                            <Input
-                              id="birth_date"
-                              name="birth_date"
-                              type="date"
-                              value={profileData.birth_date}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="transition-all duration-200"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="address"
-                            className="text-sm font-medium flex items-center"
+                        <Form {...form}>
+                          <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-5"
                           >
-                            <MapPin className="h-4 w-4 mr-2 text-primary" />
-                            Address
-                          </Label>
-                          <Input
-                            id="address"
-                            name="address"
-                            value={profileData.address}
-                            onChange={handleInputChange}
-                            disabled={!isEditing}
-                            className="transition-all duration-200"
-                          />
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="city"
-                              className="text-sm font-medium"
-                            >
-                              City
-                            </Label>
-                            <Input
-                              id="city"
-                              name="city"
-                              value={profileData.city}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="transition-all duration-200"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="postcode"
-                              className="text-sm font-medium"
-                            >
-                              Postcode
-                            </Label>
-                            <Input
-                              id="postcode"
-                              name="postcode"
-                              value={profileData.postcode}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="transition-all duration-200"
-                            />
-                          </div>
-                        </div>
+                            <div className="grid md:grid-cols-2 gap-4">
+                              {isEditing ? (
+                                <TextField
+                                  name="first_name"
+                                  label="First Name"
+                                />
+                              ) : (
+                                <Input
+                                  value={profileData.first_name}
+                                  disabled
+                                  className="capitalize"
+                                />
+                              )}
+                              {isEditing ? (
+                                <TextField name="last_name" label="Last Name" />
+                              ) : (
+                                <Input
+                                  value={profileData.last_name}
+                                  disabled
+                                  className="capitalize"
+                                />
+                              )}
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-4">
+                              {isEditing ? (
+                                <EmailField
+                                  name="email"
+                                  label="Email"
+                                  placeholder="youremail@gmail.com"
+                                />
+                              ) : (
+                                <Input
+                                  value={profileData.email}
+                                  disabled
+                                  className="capitalize"
+                                />
+                              )}
+                              {isEditing ? (
+                                <PhoneNumberField
+                                  label="Phone Number"
+                                  name="phone_number"
+                                />
+                              ) : (
+                                <Input
+                                  value={profileData.phone_number}
+                                  disabled
+                                  className="capitalize"
+                                />
+                              )}
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-4">
+                              {isEditing ? (
+                                <SelectField
+                                  label="Gender"
+                                  name="gender"
+                                  options={[
+                                    { label: "Male", value: "Male" },
+                                    { label: "Female", value: "Female" },
+                                  ]}
+                                />
+                              ) : (
+                                <Input
+                                  value={profileData.gender}
+                                  disabled
+                                  className="capitalize"
+                                />
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              {isEditing ? (
+                                <TextareaField
+                                  name="address"
+                                  label="Address"
+                                  placeholder="Your Address"
+                                />
+                              ) : (
+                                <Input
+                                  value={profileData.address}
+                                  disabled
+                                  className="capitalize"
+                                />
+                              )}
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                {isEditing ? (
+                                  <SelectField
+                                    label="City"
+                                    name="city"
+                                    options={[
+                                      { label: "Kabul", value: "kabul" },
+                                      { label: "Ghazni", value: "ghazni" },
+                                    ]}
+                                  />
+                                ) : (
+                                  <Input
+                                    value={profileData.city}
+                                    disabled
+                                    className="capitalize"
+                                  />
+                                )}
+                              </div>
+                              <div className="space-y-2">
+                                {isEditing ? (
+                                  <TextField label="Postcode" name="postcode" />
+                                ) : (
+                                  <Input
+                                    value={profileData.postcode}
+                                    disabled
+                                    className="capitalize"
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          </form>
+                        </Form>
                       </CardContent>
                     </Card>
                   </div>

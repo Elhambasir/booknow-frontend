@@ -23,7 +23,7 @@ type TripFormValues = z.infer<typeof tripSchema>;
 const HeroSectionWithMap = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { setBooking, booking } = useBookingStore();
+  const { setBooking, booking, setCurrentStep } = useBookingStore();
   const { pickup, setPickup, dropoff, setDropoff } = useLocationStore();
 
   const form = useForm<TripFormValues>({
@@ -81,6 +81,7 @@ const HeroSectionWithMap = () => {
           meet_greet: false,
           airport_fee: airportFee,
         });
+        setCurrentStep(0);
         toast.success("Redirecting to booking");
         router.push("/booking");
       } catch (error) {
@@ -112,7 +113,7 @@ const HeroSectionWithMap = () => {
                 </span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                <span className="text-primary">Premium Airport</span>
+                <span className="text-primary">G & M Airport</span>
                 <br />
                 <span className="text-secondary">Taxi Service</span>
               </h1>

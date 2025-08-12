@@ -15,7 +15,8 @@ interface Props {
 }
 
 const Index = ({ vehicles }: Props) => {
-  const { booking, currentStep, setCurrentStep } = useBookingStore();
+  const { booking, currentStep, setCurrentStep, updateBooking } =
+    useBookingStore();
   const { data: session } = useSession();
   const steps = ["Trip Details", "Vehicle Selection", "Account", "Payment"];
   const handleBack = () => {
@@ -30,6 +31,12 @@ const Index = ({ vehicles }: Props) => {
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
       if (currentStep === 1 && isUser()) {
+        updateBooking({
+          user: {
+            id: session?.user.id,
+            email: session?.user.email,
+          },
+        });
         setCurrentStep(currentStep + 2);
         return;
       }
@@ -43,8 +50,6 @@ const Index = ({ vehicles }: Props) => {
   };
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-
       <section className="pt-20 pb-8 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           {/* Progress Indicator */}

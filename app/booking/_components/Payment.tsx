@@ -30,13 +30,14 @@ export default function Payment({ handleBack }: Props) {
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="text-center space-y-4">
+          <h2 className="text-xl font-bold">Total Amount To Pay</h2>
           <div className="text-4xl font-bold text-primary">
             £{booking.totalFare.toFixed(2)}
           </div>
           <PayPalScriptProvider
             options={{ clientId: paypalClientId, currency: "GBP" }}
           >
-            <div className={`bg-white rounded-lg px-3 py-4 my-10`}>
+            <div className={`bg-white rounded-lg px-3 py-4 my-1`}>
               {/* PayPal Payment */}
               {booking && (
                 <PaypalPayment
@@ -45,10 +46,10 @@ export default function Payment({ handleBack }: Props) {
                   onComplete={(res) => {
                     if (res?.success) {
                       const book = res.data?.booking?.bookings?.at(-1);
-                      if (book?.id) updateBooking({ ...booking, id: book.id });
+                      if (book?.id) updateBooking({ id: book.id });
+                      router.push("/thank-you");
                     }
                     setMsg(null);
-                    router.push("/thank-you");
                   }}
                   setMsg={setMsg}
                 />

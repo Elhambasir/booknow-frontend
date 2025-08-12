@@ -46,19 +46,17 @@ const initialBooking: IBooking = {
 //   minimumFare: 35,
 // };
 
-
 export const useBookingStore = create<BookingStore>()(
   persist(
     (set, get) => ({
       booking: initialBooking,
       currentStep: 0,
-      setBooking: (data: IBooking) =>
-        set({ booking: data }),
+      setBooking: (data: IBooking) => set({ booking: data }),
       updateBooking: (data) => {
-        const current = get().booking
-        if (!current) return
-        const updatedBooking = { ...current, ...data }
-        set({ booking: updatedBooking })
+        const current = get().booking;
+        if (!current) return;
+        const updatedBooking = { ...current, ...data };
+        set({ booking: updatedBooking });
         // Recalculate price after update
         // setTimeout(() => get().calculatePrice(), 0);
       },

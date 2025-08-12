@@ -18,7 +18,7 @@ interface Props {
 }
 const Register = ({handleNext}: Props) => {
   const [isPending, startTransition] = useTransition();
-  const { booking, updateBooking } = useBookingStore();
+  const { updateBooking } = useBookingStore();
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -54,7 +54,6 @@ const Register = ({handleNext}: Props) => {
           return;
         }
         updateBooking({
-          ...booking,
           user: {
             id: res.user.id,
             email: res.user.email,

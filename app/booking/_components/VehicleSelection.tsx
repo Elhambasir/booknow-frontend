@@ -35,7 +35,6 @@ export default function VehicleSelection({
     }
   ) => {
     updateBooking({
-      ...booking,
       from_package: vehicle,
       from_amount: vehiclePrice.from_amount,
       return_amount: vehiclePrice.return_amount,

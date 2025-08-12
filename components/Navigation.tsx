@@ -78,7 +78,7 @@ const Navigation = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="cursor-pointer"
-                    onClick={() => (window.location.href = "/booking")}
+                    onClick={() => (window.location.href = "/profile?tab=bookings")}
                   >
                     <Settings className="mr-2 h-4 w-4" />
                     My Bookings

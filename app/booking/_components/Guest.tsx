@@ -60,7 +60,6 @@ export default function Guest({ handleNext }: Props) {
           return;
         }
         updateBooking({
-          ...booking,
           user: {
             ...response,
           },

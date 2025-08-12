@@ -84,7 +84,6 @@ export default function TripDetails({ handleNext }: Props) {
           airportFee += 10;
         }
         updateBooking({
-          ...booking,
           type: values.type,
           from_location: pickup,
           to_location: dropoff,
@@ -108,7 +107,8 @@ export default function TripDetails({ handleNext }: Props) {
       }
     });
   };
-
+  // Watch all form fields
+  const formValues = form.watch();
   useEffect(() => {
     // Update form values when locations change
     if (pickup) {
@@ -131,7 +131,6 @@ export default function TripDetails({ handleNext }: Props) {
       form.setValue("return_time", undefined);
     }
   }, [form.watch("type")]);
-
   return (
     <Card className="shadow-xl border-2 border-primary/20">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -190,7 +189,6 @@ export default function TripDetails({ handleNext }: Props) {
                       );
                     }
                     updateBooking({
-                      ...booking,
                       from_location: location,
                       from_distance: data?.distance,
                       from_duration: data?.duration,
@@ -229,7 +227,6 @@ export default function TripDetails({ handleNext }: Props) {
                       );
                     }
                     updateBooking({
-                      ...booking,
                       to_location: location,
                       from_distance: data?.distance,
                       from_duration: data?.duration,
@@ -326,7 +323,7 @@ export default function TripDetails({ handleNext }: Props) {
               className="w-full"
               size="lg"
             >
-              {isPending ? "Saving..." : "Save"}
+              {isPending ? "Processing..." : "Next"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </form>

@@ -7,7 +7,7 @@ import { useBookingStore } from "@/store/bookingStore";
 export default function BookingSummary() {
   const booking = useBookingStore((state) => state.booking);
   const currentStep = useBookingStore((state) => state.currentStep);
-  
+  console.log("BOOKING SUMMARY", booking);
   return (
     <Card className="shadow-xl border-2 border-primary/10 sticky top-6">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -35,7 +35,10 @@ export default function BookingSummary() {
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Date:</span>
                 <span>
-                  {new Date(booking.date!).toDateString()} {booking.time}
+                  {booking.date
+                    ? new Date(booking.date!).toDateString()
+                    : "N/A"}{" "}
+                  {booking.time}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
