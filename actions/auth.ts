@@ -59,7 +59,6 @@ export async function authenticate(
     );
 
     const strapiData = await strapiResponse.json();
-    console.log("STRAPI ERROR", strapiData, identifier, password);
     if (!strapiResponse.ok) {
       // Handle email not confirmed case
       if (
