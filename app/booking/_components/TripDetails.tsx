@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useTransition } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { MapPin, NavigationIcon, Handshake, ArrowRight } from "lucide-react";
+import { MapPin, Handshake, ArrowRight } from "lucide-react";
 import { useBookingStore } from "@/store/bookingStore";
 import { useLocationStore } from "@/store/useLocationStore";
 import { AddressSearch } from "@/components/AddressSearch";
@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { tripDetailsSchema } from "@/lib/validationSchema";
 import { LocationService } from "@/services/locationService";
 import { toast } from "sonner";
+import { addYears } from "date-fns";
 
 type TripDetailsFormValues = z.infer<typeof tripDetailsSchema>;
 
@@ -84,7 +85,6 @@ export default function TripDetails({ handleNext }: Props) {
           airportFee += 10;
         }
         updateBooking({
-          ...booking,
           type: values.type,
           from_location: pickup,
           to_location: dropoff,
@@ -108,7 +108,8 @@ export default function TripDetails({ handleNext }: Props) {
       }
     });
   };
-
+  // Watch all form fields
+  const formValues = form.watch();
   useEffect(() => {
     // Update form values when locations change
     if (pickup) {
@@ -131,7 +132,6 @@ export default function TripDetails({ handleNext }: Props) {
       form.setValue("return_time", undefined);
     }
   }, [form.watch("type")]);
-
   return (
     <Card className="shadow-xl border-2 border-primary/20">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -190,7 +190,6 @@ export default function TripDetails({ handleNext }: Props) {
                       );
                     }
                     updateBooking({
-                      ...booking,
                       from_location: location,
                       from_distance: data?.distance,
                       from_duration: data?.duration,
@@ -229,7 +228,6 @@ export default function TripDetails({ handleNext }: Props) {
                       );
                     }
                     updateBooking({
-                      ...booking,
                       to_location: location,
                       from_distance: data?.distance,
                       from_duration: data?.duration,
@@ -253,6 +251,9 @@ export default function TripDetails({ handleNext }: Props) {
                 name="date"
                 label="Pickup Date"
                 isRequired={true}
+                maxDate={addYears(new Date(), 1)}
+                minDate={new Date()}
+                yearRange={1}
               />
               <TimePickerField
                 name="time"
@@ -326,7 +327,7 @@ export default function TripDetails({ handleNext }: Props) {
               className="w-full"
               size="lg"
             >
-              {isPending ? "Saving..." : "Save"}
+              {isPending ? "Processing..." : "Next"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </form>

@@ -32,7 +32,8 @@ export async function fetchAPI<T>(url: string, options: FetchAPIOptions) {
     ) {
       return await response.json();
     } else {
-      return { status: response.status, statusText: response.statusText };
+      const res = await response.json();
+      return { status: response.status, statusText: response.statusText, message: res.error.message };
     }
   } catch (error) {
     console.error(`Error ${method} data:`, error);

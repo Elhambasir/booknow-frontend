@@ -96,3 +96,19 @@ export type IGuestUser = {
   birth_date?: string;
   flight_number?: string;
 };
+
+export type UserDetails = {
+  id: number,
+  username: string,
+  email: string,
+  first_name: string,
+  last_name: string,
+  user_detail: {
+    id?: number,
+    phone_number: string,
+    birth_date: Date,
+    gender: string,
+    user: any,
+    documentId?: string,
+  }
+}

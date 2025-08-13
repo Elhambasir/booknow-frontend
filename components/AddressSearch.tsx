@@ -255,14 +255,12 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
         isAirport: true,
       };
 
-      console.log("Selected airport terminal:", location);
       onLocationSelect(location);
     } else {
       // Get full address from API
       const fullAddress = await getFullAddress(result.ID);
 
       if (fullAddress) {
-        console.log("Selected address:", fullAddress);
         onLocationSelect(fullAddress);
       }
     }

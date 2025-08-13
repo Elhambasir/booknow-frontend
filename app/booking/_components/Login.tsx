@@ -2,7 +2,6 @@
 
 import { toast } from "sonner";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { LoginSchema } from "@/lib/validationSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,19 +9,22 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import TextField from "@/components/form/TextField";
 import PasswordField from "@/components/form/PasswordField";
-import { useTransition } from "react";
-import { signIn } from "next-auth/react";
+import { useTransition, useState, useEffect } from "react";
+import { signIn, getSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/store/bookingStore";
 import { useSession } from "next-auth/react";
+
 interface Props {
   handleNext: () => void;
 }
+
 const Login = ({ handleNext }: Props) => {
   const [isPending, startTransition] = useTransition();
   const { booking, updateBooking } = useBookingStore();
-  const { data: session } = useSession();
-  // 1. Define your form.
+  const { data: session, update } = useSession();
+  const [isProcessingLogin, setIsProcessingLogin] = useState(false);
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -31,40 +33,52 @@ const Login = ({ handleNext }: Props) => {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof LoginSchema>) {
+  // Handle session updates
+  useEffect(() => {
+    if (session?.user && isProcessingLogin) {
+      updateBooking({
+        user: {
+          id: session.user.id,
+          email: session.user.email,
+        },
+      });
+      handleNext();
+      setIsProcessingLogin(false);
+    }
+  }, [session, isProcessingLogin]);
+
+  async function onSubmit(values: z.infer<typeof LoginSchema>) {
     startTransition(async () => {
-      await signIn("credentials", {
+      setIsProcessingLogin(true);
+      
+      const response = await signIn("credentials", {
         identifier: values.identifier,
         password: values.password,
         redirect: false,
-      }).then((response) => {
-        if (response?.error) {
-          if (response?.error === "CredentialsSignin") {
-            toast.error("Invalid credentials");
-          }
-          return;
-        } else {
-          toast.success("Login successful", {
-            description: "Moving to the next step."
-          });
-          updateBooking({
-            ...booking,
-            user: {
-              id: session?.user.id,
-              email: session?.user.email,
-            },
-          });
-          handleNext();
-          return;
-        }
       });
+
+      if (response?.error) {
+        setIsProcessingLogin(false);
+        toast.error(response.error === "CredentialsSignin" 
+          ? "Invalid credentials" 
+          : "Login failed");
+        return;
+      }
+
+      // Force session update
+      const updatedSession = await getSession();
+      await update(updatedSession);
+
+      toast.success("Login successful", {
+        description: "Moving to the next step."
+      });
+      
+      // The useEffect will handle the rest when session updates
     });
   }
 
   return (
     <div className="min-h-fit bg-background">
-      {/* Hero Section */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <TextField
@@ -76,9 +90,9 @@ const Login = ({ handleNext }: Props) => {
           <Button
             type="submit"
             className="w-full h-12 text-lg font-semibold"
-            disabled={isPending}
+            disabled={isPending || isProcessingLogin}
           >
-            {isPending ? "Moving on..." : "Sign In"}
+            {isPending || isProcessingLogin ? "Processing..." : "Sign In"}
           </Button>
         </form>
       </Form>

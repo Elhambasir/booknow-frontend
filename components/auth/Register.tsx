@@ -61,7 +61,7 @@ const Register = () => {
         toast.success("Signed up successfully");
         router.push("/profile");
       } catch (error: any) {
-        console.log("Signup error", error);
+        console.error("Signup error", error);
         if (error.response && error.response.status === 400) {
           // Try to extract a more specific error message if available
           const apiMessage = error.response.data?.message;
@@ -78,7 +78,7 @@ const Register = () => {
         } else {
           toast.error("An unexpected error occurred.");
         }
-        console.log("error", error);
+        console.error("error", error);
         return;
       }
     });
@@ -125,7 +125,7 @@ const Register = () => {
                       className="w-full h-12 text-lg font-semibold"
                       disabled={isPending}
                     >
-                      {isPending ? "Signing In..." : "Sign In"}
+                      {isPending ? "Signing Up..." : "Sign Up"}
                     </Button>
                   </form>
                 </Form>

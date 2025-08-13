@@ -20,30 +20,7 @@ const AccountStep = ({
 }: AccountStepProps) => {
   const [authType, setAuthType] = useState<"guest" | "login" | "signup">(
     "guest"
-  );
-
-  const [formData, setFormData] = useState({
-    // Guest fields
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    gender: "",
-    birth_date: "",
-    flight_number: "",
-    // Auth fields
-    password: "",
-    confirmPassword: "",
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
- 
+  ); 
 
   return (
     <Card className="shadow-xl border-2 border-primary/20">

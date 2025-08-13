@@ -1,14 +1,79 @@
 import { fetchAPI } from "@/lib/api-wrapper";
 import { getStrapiURL } from "@/lib/get-strapi-url";
 import qs from "qs";
-import { currentUser } from "@/lib/utils";
 import { TripType } from "@/types";
-// Get user by id
-export const getUserById = async (id: string) => {
+import { currentUser } from "./utils";
+export const createUserDetails = async (
+  payload: {
+    phone_number: string;
+    birth_date: Date;
+    gender: string;
+    user: string;
+  },
+  authToken: string
+) => {
+  const path = `/api/user-details`;
+  const BASE_URL = getStrapiURL();
+  const url = new URL(path, BASE_URL);
+  const body = {
+    data: payload,
+  };
+  return await fetchAPI(url.href, {
+    method: "POST",
+    authToken,
+    body: body,
+  });
+};
+export const updateUserDetails = async (
+  payload: {
+    phone_number: string;
+    birth_date: Date;
+    gender: string;
+  },
+  documentId: string,
+  authToken: string
+) => {
+  console.log("data", payload, documentId, authToken);
+  const path = `/api/user-details/${documentId}`;
+  const BASE_URL = getStrapiURL();
+  const url = new URL(path, BASE_URL);
+  const body = {
+    data: {
+      ...payload,
+    },
+  };
+  return await fetchAPI(url.href, {
+    method: "PUT",
+    authToken,
+    body: body,
+  });
+};
+export const updateUser = async (
+  payload: {
+    username: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+  },
+  id: number,
+  authToken: string
+) => {
+  console.log("data", payload, id, authToken);
   const path = `/api/users/${id}`;
   const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
-  const authToken = process.env.BOOK_NOW_BACKEND_TOKEN;
+  return await fetchAPI(url.href, {
+    method: "PUT",
+    authToken,
+    body: payload,
+  });
+};
+
+// Get user by id
+export const getUserById = async (id: string, authToken: string) => {
+  const path = `/api/users/${id}?populate[user_detail]=true`;
+  const BASE_URL = getStrapiURL();
+  const url = new URL(path, BASE_URL);
   return await fetchAPI(url.href, {
     method: "GET",
     authToken,
@@ -47,48 +112,48 @@ export const getUserProfile = async () => {
 };
 
 export const getBookings = async ({
-    searchParams,
-  }: {
-    searchParams: { page: string; pageSize: string }
-  }) => {
-    const user = await currentUser()
-    if (!user) return null
-    if (!user?.jwt) return null
-    const query = qs.stringify(
-      {
-        populate: {
-          package: true,
-          return: true,
+  searchParams,
+}: {
+  searchParams: { page: string; pageSize: string };
+}) => {
+  const user = await currentUser();
+  if (!user) return null;
+  if (!user?.jwt) return null;
+  const query = qs.stringify(
+    {
+      populate: {
+        package: true,
+        return: true,
+      },
+      pagination: {
+        page: searchParams?.page || 1,
+        pageSize: searchParams?.pageSize || 3,
+      },
+      filters: {
+        user: {
+          id: {
+            $eq: user?.id,
+          },
         },
-        pagination: {
-          page: searchParams?.page || 1,
-          pageSize: searchParams?.pageSize || 3,
-        },
-        filters: {
-          user: {
-            id: {
-              $eq: user?.id,
+        $or: [
+          {
+            booking: {
+              $null: true,
             },
           },
-          $or: [
-            {
-              booking: {
-                $null: true,
-              },
-            },
-          ],
-        },
-        sort: ['id:desc'],
+        ],
       },
-      {
-        encodeValuesOnly: true,
-      }
-    )
-    const path = `/api/bookings?${query}`;
-    const BASE_URL = getStrapiURL();
-    const url = new URL(path, BASE_URL);
-    return await fetchAPI<TripType>(url.href, {
-        method: "GET",
-        authToken: user.jwt,
-    });
-  }
+      sort: ["id:desc"],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const path = `/api/bookings?${query}`;
+  const BASE_URL = getStrapiURL();
+  const url = new URL(path, BASE_URL);
+  return await fetchAPI<TripType>(url.href, {
+    method: "GET",
+    authToken: user.jwt,
+  });
+};

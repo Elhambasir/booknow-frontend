@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
@@ -15,11 +14,13 @@ import { Form } from "@/components/ui/form";
 import TextField from "../form/TextField";
 import PasswordField from "../form/PasswordField";
 import { useTransition } from "react";
-import { signIn } from "next-auth/react";
 import { Button } from "../ui/button";
+import { authenticate } from "@/actions/auth";
+import { useSession } from "next-auth/react";
 const Login = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { update } = useSession();
   // 1. Define your form.
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -32,21 +33,27 @@ const Login = () => {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof LoginSchema>) {
     startTransition(async () => {
-      await signIn("credentials", {
-        identifier: values.identifier,
-        password: values.password,
-        redirect: false,
-      }).then((response) => {
-        if (response?.error) {
-          if (response?.error === "CredentialsSignin") {
-            toast.error("Invalid credentials");
-          }
-          return;
-        } else {
-          toast.success("Login successful");
-          return router.push("/profile");
-        }
-      });
+      const formData = new FormData();
+      formData.append("identifier", values.identifier);
+      formData.append("password", values.password);
+
+      const result = await authenticate(undefined, formData);
+
+      if (result.type === "success") {
+        toast.success(result.title, {
+          description: result.description,
+        });
+        await update();
+        router.push("/profile");
+      } else if (result.type === "email_not_confirmed") {
+        toast.error(result.title, {
+          description: result.description,
+        });
+      } else if (result.type === "error") {
+        toast.error(result.title, {
+          description: result.description,
+        });
+      }
     });
   }
 

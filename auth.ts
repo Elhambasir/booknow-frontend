@@ -15,16 +15,18 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider !== "credentials") return true;
-      if(user.id) {
-        const existingUser = await getUserById(user.id);
-        if(!existingUser || !existingUser.confirmed) {
+      if (user.id) {
+        const authToken = user.jwt;
+        const existingUser = await getUserById(user.id, authToken!);
+        if (!existingUser || !existingUser.confirmed) {
           return false;
         }
       }
       return true;
     },
     async session({ token, session }) {
-      if(token) {
+
+      if (token) {
         session.user.id = token.sub;
         session.user.first_name = token.first_name;
         session.user.last_name = token.last_name;
@@ -43,7 +45,8 @@ export const {
         token.jwt = user.jwt;
       }
       if (!token.sub) return token;
-      const existingUser: any = await getUserById(token.sub);
+      const authToken = token.jwt as string;
+      const existingUser: any = await getUserById(token.sub, authToken!);
       if (!existingUser) return token;
 
       token.name = existingUser.username;
