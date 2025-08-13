@@ -53,11 +53,9 @@ export default function Guest({ handleNext }: Props) {
           `${strapiUrl}/api/user-details/post-user`,
           options
         );
-        if (response.status === 400) {
-          toast.error(`Error:`, {
-            description: `Email '${values.email}' already exist. Please try another email.`,
-          });
-          return;
+        if ("status" in response && "statusText" in response) {
+          // This handles non-OK responses that returned a status object
+          throw new Error(response.message || "Update failed");
         }
         updateBooking({
           user: {
@@ -69,9 +67,33 @@ export default function Guest({ handleNext }: Props) {
         });
         handleNext();
         return;
-      } catch (error) {
-        console.error("Something went wrong", error);
-        toast.error("Something went wrong");
+      } catch (error: any) {
+        console.error("Update error", error);
+
+        if (error instanceof Error) {
+          // Handle errors thrown by fetchAPI
+          toast.error(error.message || "An unexpected error occurred");
+        } else if (typeof error === "object" && error !== null) {
+          // Handle the case where the API returned an error object
+          if ("message" in error) {
+            // Try to extract a more specific error message if available
+            const apiMessage = error.message;
+            if (
+              Array.isArray(apiMessage) &&
+              apiMessage[0]?.messages?.[0]?.message
+            ) {
+              toast.error(apiMessage[0].messages[0].message);
+            } else if (typeof apiMessage === "string") {
+              toast.error(apiMessage);
+            } else {
+              toast.error("Invalid input or user already exists.");
+            }
+          } else {
+            toast.error("An unexpected error occurred.");
+          }
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
       }
     });
   };

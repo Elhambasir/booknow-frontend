@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { tripDetailsSchema } from "@/lib/validationSchema";
 import { LocationService } from "@/services/locationService";
 import { toast } from "sonner";
+import { addYears } from "date-fns";
 
 type TripDetailsFormValues = z.infer<typeof tripDetailsSchema>;
 
@@ -250,6 +251,9 @@ export default function TripDetails({ handleNext }: Props) {
                 name="date"
                 label="Pickup Date"
                 isRequired={true}
+                maxDate={addYears(new Date(), 1)}
+                minDate={new Date()}
+                yearRange={1}
               />
               <TimePickerField
                 name="time"

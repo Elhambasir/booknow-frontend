@@ -59,7 +59,7 @@ export async function authenticate(
     );
 
     const strapiData = await strapiResponse.json();
-
+    console.log("STRAPI ERROR", strapiData, identifier, password);
     if (!strapiResponse.ok) {
       // Handle email not confirmed case
       if (
@@ -73,11 +73,10 @@ export async function authenticate(
           email: identifier,
         };
       }
-
       // Handle other Strapi errors
       return {
         type: "error",
-        title: "Authentication Failed",
+        title: "Authentication failed",
         description: strapiData.error?.message || "Incorrect email or password",
       };
     }

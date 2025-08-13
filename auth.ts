@@ -16,7 +16,8 @@ export const {
     async signIn({ user, account }) {
       if (account?.provider !== "credentials") return true;
       if (user.id) {
-        const existingUser = await getUserById(user.id);
+        const authToken = user.jwt;
+        const existingUser = await getUserById(user.id, authToken!);
         if (!existingUser || !existingUser.confirmed) {
           return false;
         }
@@ -44,7 +45,8 @@ export const {
         token.jwt = user.jwt;
       }
       if (!token.sub) return token;
-      const existingUser: any = await getUserById(token.sub);
+      const authToken = token.jwt as string;
+      const existingUser: any = await getUserById(token.sub, authToken!);
       if (!existingUser) return token;
 
       token.name = existingUser.username;
