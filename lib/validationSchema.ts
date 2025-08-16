@@ -26,15 +26,19 @@ export const ForgotPasswordSchema = z.object({
   email: z.email(),
 });
 
+export const EmailConfirmationSchema = z.object({
+  otp: z.string().min(4, "OTP is required"),
+});
+
 export const ResetPasswordSchema = z
   .object({
-    otp: z.string().min(4, "OTP is required"),
+    code: z.string().min(6, "Codde is required"),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Please confirm your password"),
+    passwordConfirmation: z.string().min(6, "Please confirm your password"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
-    path: ["confirmPassword"],
+    path: ["passwordConfirmation"],
   });
 
 export const locationSchema = z.object({
@@ -208,10 +212,10 @@ export const UserRegisterSchema = z.object({
   email: z.string().email(),
   phone_number: z
     .string()
-    .regex(/^\+?[1-9]\d{1,14}$/, { message: 'Invalid phone number format' }),
+    .regex(/^\+?[1-9]\d{1,14}$/, { message: "Invalid phone number format" }),
   gender: z.string(),
-  birth_date: z.string()
-})
+  birth_date: z.string(),
+});
 
 export const RegisterSchema = z
   .object({

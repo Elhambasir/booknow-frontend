@@ -10,7 +10,6 @@ export default async function page({
   }>;
 }) {
   const { tab } = await searchParams;
-  console.log(tab)
   const session = await auth();
   const user =  await getUserById(session?.user.id, session?.user.jwt);
   return (

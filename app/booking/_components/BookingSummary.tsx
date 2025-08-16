@@ -7,7 +7,6 @@ import { useBookingStore } from "@/store/bookingStore";
 export default function BookingSummary() {
   const booking = useBookingStore((state) => state.booking);
   const currentStep = useBookingStore((state) => state.currentStep);
-  console.log("BOOKING SUMMARY", booking);
   return (
     <Card className="shadow-xl border-2 border-primary/10 sticky top-6">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">

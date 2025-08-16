@@ -22,7 +22,6 @@ export default {
             );
 
             const res = await response.json();
-
             if (!response.ok) {
               // Handle specific email not confirmed error
               return null;

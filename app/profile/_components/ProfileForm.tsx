@@ -75,7 +75,6 @@ function ProfileForm({ userDetails }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const { data: session } = useSession();
   const userDetail = userDetails.user_detail;
-  console.log("user details", userDetails);
   // 1. Define your form.
   const form = useForm<z.infer<typeof UserProfileFormSchema>>({
     resolver: zodResolver(UserProfileFormSchema),
@@ -89,7 +88,6 @@ function ProfileForm({ userDetails }: Props) {
       birth_date: userDetail?.birth_date?new Date(userDetail?.birth_date) ?? undefined: undefined,
     },
   });
-
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof UserProfileFormSchema>) {
     startTransition(async () => {
@@ -129,12 +127,13 @@ function ProfileForm({ userDetails }: Props) {
             );
           }
         } else {
+          debugger;
           const createUserDetailsResponse = await createUserDetails(
             {
               phone_number: values.phone_number,
               birth_date: values.birth_date,
               gender: values.gender,
-              user: session?.user.id,
+              user: Number(session?.user.id),
             },
             session?.user.jwt
           );

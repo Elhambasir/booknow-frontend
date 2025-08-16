@@ -8,7 +8,7 @@ export const createUserDetails = async (
     phone_number: string;
     birth_date: Date;
     gender: string;
-    user: string;
+    user: number;
   },
   authToken: string
 ) => {
@@ -33,7 +33,6 @@ export const updateUserDetails = async (
   documentId: string,
   authToken: string
 ) => {
-  console.log("data", payload, documentId, authToken);
   const path = `/api/user-details/${documentId}`;
   const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
@@ -58,7 +57,6 @@ export const updateUser = async (
   id: number,
   authToken: string
 ) => {
-  console.log("data", payload, id, authToken);
   const path = `/api/users/${id}`;
   const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);

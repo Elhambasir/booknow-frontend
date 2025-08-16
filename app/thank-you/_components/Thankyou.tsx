@@ -14,7 +14,6 @@ export default function Thankyou() {
   const { clearLocations } = useLocationStore();
   const router = useRouter();
   const { width, height } = useWindowSize();
-  console.log("booking in thankyou", booking);
   // Clear booking if user tries to refresh
   useEffect(() => {
     if (!booking.from_location || !booking.to_location) {

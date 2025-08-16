@@ -15,9 +15,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
+import { getStrapiURL } from "@/lib/get-strapi-url";
 const Register = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const strapiUrl = getStrapiURL();
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -33,7 +35,7 @@ const Register = () => {
     startTransition(async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/local/register`,
+          `${strapiUrl}/api/auth/local/register`,
           {
             method: "POST",
             headers: {
@@ -47,8 +49,8 @@ const Register = () => {
           }
         );
 
+        const res = await response.json();
         if (!response.ok) {
-          const res = await response.json();
           if (res.error.status === 400) {
             toast.error("Registration failed", {
               description: res.error.message,
@@ -58,8 +60,10 @@ const Register = () => {
           toast.error("Something went wrong");
           return;
         }
-        toast.success("Signed up successfully");
-        router.push("/profile");
+        toast.success("Signed up successfully", {
+          description: res.message||"Email sent"
+        });
+        router.push(`/auth/email-confirmation?email=${values.email}`);
       } catch (error: any) {
         console.error("Signup error", error);
         if (error.response && error.response.status === 400) {
