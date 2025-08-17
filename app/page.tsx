@@ -11,7 +11,7 @@ import TestimonialsSection from "@/components/TestimonialSection";
 import { getPackages } from "@/services/packageService";
 export default async function Home() {
   const vehicles = await getPackages();
-
+  console.log(vehicles)
   return (
     <div className="min-h-screen bg-background">
       <HeroSectionWithMap />

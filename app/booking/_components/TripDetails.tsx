@@ -177,7 +177,7 @@ export default function TripDetails({ handleNext }: Props) {
                   onLocationSelect={async (location) => {
                     setPickup(location);
                     let data = undefined;
-                    if (location&&dropoff) {
+                    if (location && dropoff) {
                       data = await getDistanceDuration(
                         {
                           lat: location?.latitude!,
@@ -290,7 +290,10 @@ export default function TripDetails({ handleNext }: Props) {
                 <DatePickerField
                   name="return_date"
                   label="Return Date"
+                  maxDate={addYears(new Date(), 1)}
+                  minDate={new Date()}
                   isRequired={true}
+                  yearRange={1}
                 />
                 <TimePickerField
                   name="return_time"
