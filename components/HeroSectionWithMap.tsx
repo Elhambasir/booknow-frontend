@@ -31,8 +31,8 @@ const HeroSectionWithMap = () => {
     resolver: zodResolver(tripSchema),
     defaultValues: {
       type: "one way",
-      from_location: undefined,
-      to_location: undefined,
+      from: undefined,
+      to: undefined,
       date: undefined,
       time: undefined,
     },
@@ -68,16 +68,16 @@ const HeroSectionWithMap = () => {
         }
         setBooking({
           type: values.type,
-          from_location: pickup,
-          to_location: dropoff,
+          booking_status: 'pending',
+          from: pickup,
+          to: dropoff,
           date: values.date,
-          time: values.time,
-          from_distance: distance,
-          from_duration: duration,
-          from_amount: 0,
-          totalFare: 0,
+          time: values.time+":00.000",
+          distance: distance,
+          ETA: duration,
+          amount: 0,
           passengers: 1,
-          luggage: 0,
+          luggages: 0,
           child_seat: 0,
           meet_greet: false,
           airport_fee: airportFee,
@@ -93,10 +93,10 @@ const HeroSectionWithMap = () => {
   };
   useEffect(() => {
     if (pickup) {
-      form.setValue("from_location", pickup.address);
+      form.setValue("from", pickup.address);
     }
     if (dropoff) {
-      form.setValue("to_location", dropoff.address);
+      form.setValue("to", dropoff.address);
     }
   }, [pickup, dropoff]);
 
@@ -170,14 +170,14 @@ const HeroSectionWithMap = () => {
                           isRequired={true}
                           onLocationSelect={(location) => {
                             setPickup(location);
-                            form.setValue("from_location", location.address, {
+                            form.setValue("from", location.address, {
                               shouldValidate: true,
                             });
                           }}
                         />
-                        {form.formState.errors.from_location && (
+                        {form.formState.errors.from && (
                           <p className="text-sm text-red-500 mt-1">
-                            {form.formState.errors.from_location.message}
+                            {form.formState.errors.from.message}
                           </p>
                         )}
                       </div>
@@ -190,14 +190,14 @@ const HeroSectionWithMap = () => {
                           type="dropoff"
                           onLocationSelect={(location) => {
                             setDropoff(location);
-                            form.setValue("to_location", location.address, {
+                            form.setValue("to", location.address, {
                               shouldValidate: true,
                             });
                           }}
                         />
-                        {form.formState.errors.to_location && (
+                        {form.formState.errors.to && (
                           <p className="text-sm text-red-500 mt-1">
-                            {form.formState.errors.to_location.message}
+                            {form.formState.errors.to.message}
                           </p>
                         )}
                       </div>

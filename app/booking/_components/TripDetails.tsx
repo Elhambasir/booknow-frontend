@@ -19,6 +19,7 @@ import { tripDetailsSchema } from "@/lib/validationSchema";
 import { LocationService } from "@/services/locationService";
 import { toast } from "sonner";
 import { addYears } from "date-fns";
+import TextField from "@/components/form/TextField";
 
 type TripDetailsFormValues = z.infer<typeof tripDetailsSchema>;
 
@@ -44,11 +45,13 @@ export default function TripDetails({ handleNext }: Props) {
     resolver: zodResolver(tripDetailsSchema),
     defaultValues: {
       type: booking?.type || "one way",
-      from_location: booking?.from_location?.address || undefined,
-      to_location: booking?.to_location?.address || undefined,
+      from: booking?.from?.address || undefined,
+      to: booking?.to?.address || undefined,
       date: booking.date || undefined,
       time: booking?.time || undefined,
       passengers: booking?.passengers.toString() || undefined,
+      luggages: booking?.luggages.toString() || undefined,
+      flight_number: booking?.flight_number || undefined,
       return_date: booking?.return_date || undefined,
       return_time: booking?.return_time || undefined,
       child_seat: booking?.child_seat.toString() || undefined,
@@ -78,25 +81,25 @@ export default function TripDetails({ handleNext }: Props) {
           return;
         }
         let airportFee = 0;
-        if (booking.from_location?.isAirport) {
+        if (booking.from?.isAirport) {
           airportFee = 10;
         }
-        if (booking.to_location?.isAirport) {
+        if (booking.to?.isAirport) {
           airportFee += 10;
         }
         updateBooking({
           type: values.type,
-          from_location: pickup,
-          to_location: dropoff,
-          from_distance: distance,
-          from_duration: duration,
+          from: pickup,
+          to: dropoff,
+          distance: distance,
+          ETA: duration,
           date: values.date,
-          time: values.time,
+          time: values.time+":00.000",
           passengers: Number(values.passengers),
+          luggages: Number(values.luggages),
+          flight_number: values.flight_number,
           return_date: values.return_date,
-          return_time: values.return_time,
-          return_distance: values.type === "return" ? distance : undefined,
-          return_duration: values.type === "return" ? duration : undefined,
+          return_time: values.return_time+":00.000",
           child_seat: Number(values.child_seat) || 0,
           meet_greet: values.meet_greet,
           airport_fee: airportFee,
@@ -108,20 +111,19 @@ export default function TripDetails({ handleNext }: Props) {
       }
     });
   };
-  // Watch all form fields
-  const formValues = form.watch();
+
   useEffect(() => {
     // Update form values when locations change
     if (pickup) {
-      form.setValue("from_location", pickup.address, { shouldValidate: true });
+      form.setValue("from", pickup.address, { shouldValidate: true });
     } else {
-      form.setValue("from_location", "", { shouldValidate: true });
+      form.setValue("from", "", { shouldValidate: true });
     }
 
     if (dropoff) {
-      form.setValue("to_location", dropoff.address, { shouldValidate: true });
+      form.setValue("to", dropoff.address, { shouldValidate: true });
     } else {
-      form.setValue("to_location", "", { shouldValidate: true });
+      form.setValue("to", "", { shouldValidate: true });
     }
   }, [pickup, dropoff]);
 
@@ -190,18 +192,18 @@ export default function TripDetails({ handleNext }: Props) {
                       );
                     }
                     updateBooking({
-                      from_location: location,
-                      from_distance: data?.distance,
-                      from_duration: data?.duration,
+                      from: location,
+                      distance: data?.distance,
+                      ETA: data?.duration,
                     });
-                    form.setValue("from_location", location.address, {
+                    form.setValue("from", location.address, {
                       shouldValidate: true,
                     });
                   }}
                 />
-                {form.formState.errors.from_location && (
+                {form.formState.errors.from && (
                   <p className="text-sm text-red-500 mt-1">
-                    {form.formState.errors.from_location.message}
+                    {form.formState.errors.from.message}
                   </p>
                 )}
               </div>
@@ -228,18 +230,18 @@ export default function TripDetails({ handleNext }: Props) {
                       );
                     }
                     updateBooking({
-                      to_location: location,
-                      from_distance: data?.distance,
-                      from_duration: data?.duration,
+                      to: location,
+                      distance: data?.distance,
+                      ETA: data?.duration,
                     });
-                    form.setValue("to_location", location.address, {
+                    form.setValue("to", location.address, {
                       shouldValidate: true,
                     });
                   }}
                 />
-                {form.formState.errors.to_location && (
+                {form.formState.errors.to && (
                   <p className="text-sm text-red-500 mt-1">
-                    {form.formState.errors.to_location.message}
+                    {form.formState.errors.to.message}
                   </p>
                 )}
               </div>
@@ -283,6 +285,25 @@ export default function TripDetails({ handleNext }: Props) {
                 }))}
               />
             </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <SelectField
+                name="luggages"
+                label="Luggages"
+                placeholder="Select Luggages"
+                isRequired={true}
+                options={[...Array(4)].map((_, i) => ({
+                  value: i.toString(),
+                  label: `${i} luggage${i > 0 ? "s" : ""}`,
+                }))}
+              />
+              {(booking?.from?.isAirport||booking?.to?.isAirport)&&(
+                <TextField
+                name="flight_number"
+                label="Flight Number"
+                placeholder="Enter flight number"
+              />
+              )}
+            </div>
 
             {/* Return Journey */}
             {form.watch("type") === "return" && (
@@ -304,7 +325,8 @@ export default function TripDetails({ handleNext }: Props) {
             )}
 
             {/* Additional Options */}
-            <div className="space-y-4 p-4 bg-muted/20 rounded-lg">
+            {(booking?.from?.isAirport||booking?.to?.isAirport)&&(
+              <div className="space-y-4 p-4 bg-muted/20 rounded-lg">
               <h3 className="font-medium">Additional Options</h3>
               <div className="flex items-center space-x-2 pt-2">
                 <CheckboxField
@@ -316,14 +338,16 @@ export default function TripDetails({ handleNext }: Props) {
                 />
               </div>
             </div>
+            )}
+            
             <Button
               type="submit"
               disabled={
                 isPending ||
                 !pickup ||
                 !dropoff ||
-                !form.watch("from_location") ||
-                !form.watch("to_location") ||
+                !form.watch("from") ||
+                !form.watch("to") ||
                 !form.watch("date") ||
                 !form.watch("time")
               }

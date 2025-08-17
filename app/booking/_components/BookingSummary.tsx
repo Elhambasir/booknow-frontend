@@ -16,19 +16,19 @@ export default function BookingSummary() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        {booking.from_location ? (
+        {booking.from ? (
           <div className="space-y-4">
             <div className="space-y-3">
               <div className="flex justify-between items-start text-sm">
                 <span className="text-muted-foreground font-medium">From:</span>
                 <span className="text-right text-sm max-w-[60%]">
-                  {booking.from_location.address}
+                  {booking.from.address}
                 </span>
               </div>
               <div className="flex justify-between items-start text-sm">
                 <span className="text-muted-foreground font-medium">To:</span>
                 <span className="text-right text-sm max-w-[60%]">
-                  {booking.to_location?.address}
+                  {booking.to?.address}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
@@ -44,26 +44,26 @@ export default function BookingSummary() {
                 <span className="text-muted-foreground">Passengers:</span>
                 <span>{booking.passengers}</span>
               </div>
-              {booking.from_package && (
+              {booking.package && (
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Vehicle:</span>
-                  <span>{booking.from_package.name}</span>
+                  <span>{booking.package.name}</span>
                 </div>
               )}
-              {booking?.from_distance === undefined ||
-              booking?.from_duration === undefined ? (
+              {booking?.distance === undefined ||
+              booking?.ETA === undefined ? (
                 <div className="flex items-center space-x-4 p-3 bg-primary/10 rounded-lg animate-pulse">
                   <NavigationIcon className="h-5 w-5 text-primary" />
                   <div className="h-4 w-full bg-gray-200 rounded"></div>
                 </div>
-              ) : booking.from_distance != 0 && booking.from_duration != 0 ? (
+              ) : booking.distance != 0 && booking.ETA != 0 ? (
                 <div className="flex items-center space-x-4 p-3 bg-primary/10 rounded-lg">
                   <NavigationIcon className="h-5 w-5 text-primary" />
                   <div className="text-sm">
                     <span className="font-medium">Distance:</span>{" "}
-                    {booking.from_distance} miles •
-                    <span className="font-medium ml-2">Duration:</span>{" "}
-                    {booking.from_duration} minutes
+                    {booking.distance} miles •
+                    <span className="font-medium ml-2">duration:</span>{" "}
+                    {booking.ETA} minutes
                   </div>
                 </div>
               ) : null}
@@ -75,7 +75,7 @@ export default function BookingSummary() {
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">Total Fare:</span>
                     <span className="text-2xl font-bold text-primary">
-                      £{booking.totalFare?.toFixed(2)}
+                      £{booking.amount?.toFixed(2)}
                     </span>
                   </div>
                   {booking.type === "return" && (

@@ -9,6 +9,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUser, createUserDetails, updateUserDetails } from "@/lib/user";
 import { useSession } from "next-auth/react";
+import { revalidateMyPath } from "@/actions/revalidatePath";
 const UserProfileFormSchema = z.object({
   username: z
     .string()
@@ -148,7 +149,7 @@ function ProfileForm({ userDetails }: Props) {
             );
           }
         }
-
+        await revalidateMyPath(`/profile`);
         toast.success("Update seccuessfull");
       } catch (error: any) {
         console.error("Update error", error);
@@ -183,6 +184,7 @@ function ProfileForm({ userDetails }: Props) {
 
   const handleSave = () => {
     form.handleSubmit(onSubmit)();
+    setIsEditing(false);
   };
   return (
     <div className="lg:col-span-2">

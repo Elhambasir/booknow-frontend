@@ -29,6 +29,16 @@ const Navigation = () => {
     signOut();
     toast.success("Logout successfully");
   };
+
+  function getUserFullName() {
+    const firstName = session?.user.first_name;
+    const lastName = session?.user.last_name;
+    if (firstName && lastName) {
+      return firstName + " " + lastName;
+    } else {
+      return session?.user.name;
+    }
+  };
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,11 +76,15 @@ const Navigation = () => {
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none cursor-pointer">
-                  <UserAvatar imageUrl="images/yourimage.png" fullName="Basir elham" alt="Profile Image" />
+                  <UserAvatar
+                    imageUrl="images/yourimage.png"
+                    fullName={getUserFullName()}
+                    alt="Profile Image"
+                  />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem
-                  className="cursor-pointer"
+                    className="cursor-pointer"
                     onClick={() => (window.location.href = "/profile")}
                   >
                     <User className="mr-2 h-4 w-4" />
@@ -78,7 +92,9 @@ const Navigation = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="cursor-pointer"
-                    onClick={() => (window.location.href = "/profile?tab=bookings")}
+                    onClick={() =>
+                      (window.location.href = "/profile?tab=bookings")
+                    }
                   >
                     <Settings className="mr-2 h-4 w-4" />
                     My Bookings

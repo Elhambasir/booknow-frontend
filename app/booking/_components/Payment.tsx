@@ -20,6 +20,7 @@ export default function Payment({ handleBack }: Props) {
   if (!paypalClientId) {
     throw new Error("PayPal Client ID is missing from environment variables");
   }
+  
   return (
     <Card className="shadow-xl border-2 border-primary/20">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -32,7 +33,7 @@ export default function Payment({ handleBack }: Props) {
         <div className="text-center space-y-4">
           <h2 className="text-xl font-bold">Total Amount To Pay</h2>
           <div className="text-4xl font-bold text-primary">
-            £{booking.totalFare.toFixed(2)}
+            £{booking?.amount?.toFixed(2)}
           </div>
           <PayPalScriptProvider
             options={{ clientId: paypalClientId, currency: "GBP" }}

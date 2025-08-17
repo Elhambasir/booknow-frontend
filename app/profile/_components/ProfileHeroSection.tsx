@@ -1,25 +1,10 @@
+import { BookingSelectInterface } from "@/types";
 import { User } from "lucide-react";
 
-const mockBookings = [
-  {
-    id: "1",
-    status: "Completed",
-  },
-  {
-    id: "2",
-    status: "Upcoming",
-  },
-  {
-    id: "3",
-    status: "Completed",
-  },
-  {
-    id: "4",
-    status: "Cancelled",
-  },
-];
 
-const ProfileHeroSection = () => {
+const ProfileHeroSection = ({
+  userBooking
+}: {userBooking: BookingSelectInterface[]}) => {
   return (
     <section className="relative py-20 overflow-hidden">
       <div className="absolute inset-0 bg-[var(--gradient-hero)]" />
@@ -46,7 +31,7 @@ const ProfileHeroSection = () => {
           <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">
-                {mockBookings.filter((b) => b.status === "Completed").length}
+                {userBooking?.filter((b: BookingSelectInterface) => b.booking_status === "delivered").length}
               </div>
               <div className="text-brand-gold/80 text-sm">
                 Completed Trips
@@ -54,9 +39,9 @@ const ProfileHeroSection = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">
-                {mockBookings.filter((b) => b.status === "Upcoming").length}
+                {userBooking?.filter((b:BookingSelectInterface) => b.booking_status === "pending").length}
               </div>
-              <div className="text-brand-gold/80 text-sm">Upcoming</div>
+              <div className="text-brand-gold/80 text-sm">Pending</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">4.8</div>

@@ -53,38 +53,7 @@ export type IPackage = {
     }[];
   };
 };
-export interface IBooking {
-  id?: string;
-  type: "return" | "one way";
-  passengers: number;
-  luggage: number;
-  from_location: Location | null;
-  to_location: Location | null;
-  date?: Date;
-  time: string;
-  from_package?: IPackage;
-  from_distance: number;
-  from_duration: number | null;
-  from_amount: number | null;
 
-  // The return section should only be present if the type is 'return'
-  return_from?: Location | null;
-  return_to?: Location | null;
-  return_date?: Date;
-  return_time?: string | null;
-  return_package?: IPackage | undefined;
-  return_distance?: number | undefined;
-  return_duration?: number | undefined;
-  return_amount?: number | null;
-
-  // Optional fields for both 'one way' and 'return' booking types
-  meet_greet: boolean;
-  child_seat: number;
-  airport_fee: number;
-  flight_number?: string;
-  totalFare: number;
-  user?: IGuestUser;
-}
 export type IGuestUser = {
   id?: string;
   username?: string;
@@ -111,4 +80,63 @@ export type UserDetails = {
     user: any,
     documentId?: string,
   }
+}
+export interface BookingCreateInterface {
+  id?: string;
+  type: "return" | "one way";
+  booking_status: string;
+  passengers: number;
+  luggages: number;
+  from: Location | null;
+  to: Location | null;
+  date: Date;
+  time: string;
+  package?: IPackage;
+  distance: number;
+  ETA: number;
+  amount: number;
+
+  // The return section should only be present if the type is 'return'
+  return_date?: Date;
+  return_time?: string | null;
+
+  // Optional fields for both 'one way' and 'return' booking types
+  meet_greet: boolean;
+  child_seat: number;
+  airport_fee: number;
+  flight_number?: string;
+  user?: IGuestUser;
+}
+export interface BookingSelectInterface {
+  id: string;
+  documentId: string;
+  booking_status: string;
+  hasReturn: boolean;
+  date: Date;
+  time: string;
+  passengers: number;
+  distance: number;
+  driver_id?: number;
+  amount: number;
+  luggages?: number;
+  ETA?: number | null;
+  type: "return" | "one way";
+  from: Location;
+  to: Location;
+  flight_number?: string;
+  gm_fees_percentage: number;
+  vehicle_details?: unknown;
+  canceled_by?: unknown;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date;
+  package: IPackage;
+
+  return_date?: Date;
+  return_time?: string | null;
+
+  // Optional fields for both 'one way' and 'return' booking types
+  meet_greet: boolean;
+  child_seat: number;
+  airport_fee: number;
 }

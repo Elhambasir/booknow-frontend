@@ -9,11 +9,12 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import TextField from "@/components/form/TextField";
 import PasswordField from "@/components/form/PasswordField";
-import { useTransition, useState, useEffect } from "react";
+import { useTransition, useEffect } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/store/bookingStore";
 import { useSession } from "next-auth/react";
+import { authenticate } from "@/actions/auth";
 
 interface Props {
   handleNext: () => void;
@@ -21,9 +22,8 @@ interface Props {
 
 const Login = ({ handleNext }: Props) => {
   const [isPending, startTransition] = useTransition();
-  const { booking, updateBooking } = useBookingStore();
+  const { updateBooking } = useBookingStore();
   const { data: session, update } = useSession();
-  const [isProcessingLogin, setIsProcessingLogin] = useState(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -35,7 +35,7 @@ const Login = ({ handleNext }: Props) => {
 
   // Handle session updates
   useEffect(() => {
-    if (session?.user && isProcessingLogin) {
+    if (session?.user) {
       updateBooking({
         user: {
           id: session.user.id,
@@ -43,39 +43,61 @@ const Login = ({ handleNext }: Props) => {
         },
       });
       handleNext();
-      setIsProcessingLogin(false);
     }
-  }, [session, isProcessingLogin]);
-
-  async function onSubmit(values: z.infer<typeof LoginSchema>) {
-    startTransition(async () => {
-      setIsProcessingLogin(true);
-      
-      const response = await signIn("credentials", {
-        identifier: values.identifier,
-        password: values.password,
-        redirect: false,
+  }, [session]);
+    // 2. Define a submit handler.
+    function onSubmit(values: z.infer<typeof LoginSchema>) {
+      startTransition(async () => {
+        const formData = new FormData();
+        formData.append("identifier", values.identifier);
+        formData.append("password", values.password);
+  
+        const result = await authenticate(undefined, formData);
+  
+        if (result.type === "success") {
+          toast.success(result.title, {
+            description: result.description,
+          });
+          const updatedSession = await getSession();
+          await update(updatedSession);
+          
+        } else if (result.type === "email_not_confirmed") {
+          toast.error(result.title, {
+            description: result.description,
+          });
+        } else if (result.type === "error") {
+          toast.error(result.title, {
+            description: result.description,
+          });
+        }
       });
+    }
+  // async function onSubmit(values: z.infer<typeof LoginSchema>) {
+  //   startTransition(async () => {      
+  //     const response = await signIn("credentials", {
+  //       identifier: values.identifier,
+  //       password: values.password,
+  //       redirect: false,
+  //     });
 
-      if (response?.error) {
-        setIsProcessingLogin(false);
-        toast.error(response.error === "CredentialsSignin" 
-          ? "Invalid credentials" 
-          : "Login failed");
-        return;
-      }
+  //     if (response?.error) {
+  //       toast.error(response.error === "CredentialsSignin" 
+  //         ? "Invalid credentials" 
+  //         : "Login failed");
+  //       return;
+  //     }
 
-      // Force session update
-      const updatedSession = await getSession();
-      await update(updatedSession);
+  //     // Force session update
+  //     const updatedSession = await getSession();
+  //     await update(updatedSession);
 
-      toast.success("Login successful", {
-        description: "Moving to the next step."
-      });
+  //     toast.success("Login successful", {
+  //       description: "Moving to the next step."
+  //     });
       
-      // The useEffect will handle the rest when session updates
-    });
-  }
+  //     // The useEffect will handle the rest when session updates
+  //   });
+  // }
 
   return (
     <div className="min-h-fit bg-background">
@@ -90,23 +112,12 @@ const Login = ({ handleNext }: Props) => {
           <Button
             type="submit"
             className="w-full h-12 text-lg font-semibold"
-            disabled={isPending || isProcessingLogin}
+            disabled={isPending}
           >
-            {isPending || isProcessingLogin ? "Processing..." : "Sign In"}
+            {isPending ? "Processing..." : "Sign In"}
           </Button>
         </form>
       </Form>
-      <div className="mt-4 text-center">
-        <p className="text-muted-foreground">
-          Forgot your password?{" "}
-          <Link
-            href="/auth/password/forgot-password"
-            className="text-primary hover:underline font-semibold"
-          >
-            Reset it
-          </Link>
-        </p>
-      </div>
     </div>
   );
 };

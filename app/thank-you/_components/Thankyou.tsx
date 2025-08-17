@@ -1,5 +1,13 @@
 "use client";
-import { CheckCircle2, Clock, MapPin, Phone, Car, ArrowRight, ArrowLeft } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  MapPin,
+  Phone,
+  Car,
+  ArrowRight,
+  ArrowLeft,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useBookingStore } from "@/store/bookingStore";
@@ -16,7 +24,7 @@ export default function Thankyou() {
   const { width, height } = useWindowSize();
   // Clear booking if user tries to refresh
   useEffect(() => {
-    if (!booking.from_location || !booking.to_location) {
+    if (!booking.from || !booking.to) {
       router.push("/");
     }
   }, [booking, router]);
@@ -82,7 +90,7 @@ export default function Thankyou() {
                   <div>
                     <h3 className="font-medium">Pickup Location</h3>
                     <p className="text-muted-foreground">
-                      {booking?.from_location?.address}
+                      {booking?.from?.address}
                     </p>
                   </div>
                 </div>
@@ -92,7 +100,7 @@ export default function Thankyou() {
                   <div>
                     <h3 className="font-medium">Drop-off Location</h3>
                     <p className="text-muted-foreground">
-                      {booking?.to_location?.address}
+                      {booking?.to?.address}
                     </p>
                   </div>
                 </div>
@@ -104,8 +112,7 @@ export default function Thankyou() {
                     <p className="text-muted-foreground">
                       {" "}
                       {booking.date &&
-                        new Date(booking.date).toDateString()}{" "}
-                      at {booking.time}
+                        new Date(booking.date).toDateString()} at {booking.time}
                     </p>
                   </div>
                 </div>
@@ -118,9 +125,7 @@ export default function Thankyou() {
                         <h3 className="font-medium">Return Time</h3>
                         <p className="text-muted-foreground">
                           {booking.return_date &&
-                            new Date(
-                              booking.return_date
-                            ).toDateString()}{" "}
+                            new Date(booking.return_date).toDateString()}{" "}
                           at {booking.return_time}
                         </p>
                       </div>
@@ -132,7 +137,7 @@ export default function Thankyou() {
                   <div>
                     <h3 className="font-medium">Vehicle Type</h3>
                     <p className="text-muted-foreground capitalize">
-                      {booking.from_package?.type}
+                      {booking?.package?.type}
                     </p>
                   </div>
                 </div>
@@ -150,7 +155,7 @@ export default function Thankyou() {
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total Paid</span>
                     <span className="text-primary">
-                      £{booking.totalFare.toFixed(2)}
+                      £{booking?.amount.toFixed(2)}
                     </span>
                   </div>
 
@@ -211,13 +216,15 @@ export default function Thankyou() {
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
-                asChild
                 type="button"
                 variant="outline"
-                onClick={() => clearStore()}
+                onClick={() => {
+                  clearStore();
+                  window.location.href = "/profile?tab=bookings";
+                }}
                 className="h-12 px-6"
               >
-                <Link href="/profile?tab=booking">My Bookings</Link>
+                My Bookings
               </Button>
 
               <Button

@@ -139,8 +139,8 @@ const Index = ({ vehicles }: Props) => {
             <div className="space-y-6">
               <BookingSummary />
               <DirectionMap
-                pickup={booking?.from_location!}
-                dropoff={booking.to_location!}
+                pickup={booking?.from!}
+                dropoff={booking.to!}
               />
             </div>
           </div>

@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { IBooking } from "@/types";
+import { BookingCreateInterface } from "@/types";
 
 interface BookingStore {
-  booking: IBooking;
+  booking: BookingCreateInterface;
   currentStep: number;
-  setBooking: (data: IBooking) => void;
-  updateBooking: (data: Partial<IBooking>) => void;
+  setBooking: (data: BookingCreateInterface) => void;
+  updateBooking: (data: Partial<BookingCreateInterface>) => void;
   setCurrentStep: (step: number) => void;
   // calculatePrice: () => void;
   clearBooking: () => void;
@@ -19,23 +19,23 @@ interface BookingStore {
   // };
 }
 
-const initialBooking: IBooking = {
+const initialBooking: BookingCreateInterface = {
   type: "one way",
-  from_location: null,
-  to_location: null,
-  date: undefined,
+  booking_status: 'pending',
+  from: null,
+  to: null,
+  date: new Date(),
   time: "",
   passengers: 1,
-  luggage: 1,
+  luggages: 1,
   meet_greet: false,
   child_seat: 0,
   airport_fee: 0,
   flight_number: "",
-  from_distance: 0,
-  from_duration: 0,
-  from_amount: 0,
-  totalFare: 0,
-  from_package: undefined,
+  distance: 0,
+  ETA: 0,
+  amount: 0,
+  package: undefined,
 };
 
 // // Optimized pricing for London market
@@ -51,7 +51,7 @@ export const useBookingStore = create<BookingStore>()(
     (set, get) => ({
       booking: initialBooking,
       currentStep: 0,
-      setBooking: (data: IBooking) => set({ booking: data }),
+      setBooking: (data: BookingCreateInterface) => set({ booking: data }),
       updateBooking: (data) => {
         const current = get().booking;
         if (!current) return;

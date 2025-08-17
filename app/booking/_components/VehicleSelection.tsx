@@ -18,7 +18,7 @@ export default function VehicleSelection({
 }: Props) {
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
   const { booking, updateBooking } = useBookingStore();
-  const { type, from_distance, from_duration, meet_greet, child_seat } =
+  const { type, distance, ETA, meet_greet, child_seat } =
   booking;
   const handleVehicleSelect = (
     vehicle: IPackage,
@@ -35,10 +35,8 @@ export default function VehicleSelection({
     }
   ) => {
     updateBooking({
-      from_package: vehicle,
-      from_amount: vehiclePrice.from_amount,
-      return_amount: vehiclePrice.return_amount,
-      totalFare: vehiclePrice.total,
+      package: vehicle,
+      amount: vehiclePrice.total,
     });
     handleNext();
   };
@@ -57,8 +55,8 @@ export default function VehicleSelection({
             const vehiclePrice = getPrice(
               type,
               vehicle.price_options,
-              from_distance,
-              from_duration ?? 0,
+              distance,
+              ETA ?? 0,
               {
                 meet_greet: meet_greet ? 10 : 0,
                 child_seat: child_seat * 8,
@@ -129,7 +127,7 @@ export default function VehicleSelection({
                           Total fare
                         </div>
                         <div className="text-2xl sm:text-3xl font-bold text-primary">
-                          £{vehiclePrice?.total.toFixed()}
+                          £{vehiclePrice?.total.toFixed(2)}
                         </div>
                       </div>
                     </div>

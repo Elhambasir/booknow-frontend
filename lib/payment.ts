@@ -1,8 +1,8 @@
 import { fetchAPI } from "@/lib/api-wrapper";
 import { getStrapiURL } from "@/lib/get-strapi-url";
-import { IBooking } from "@/types";
+import { BookingCreateInterface } from "@/types";
 export const createPaypalOrders = async (
-  payload: IBooking,
+  payload: BookingCreateInterface,
   authToken: string
 ) => {
   const path = `/api/paypal-orders`;

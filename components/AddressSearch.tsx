@@ -318,7 +318,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
       });
       updateBooking({
         ...booking,
-        from_location: undefined,
+        from: undefined,
       });
     } else {
       updateLocation(type, {
@@ -332,7 +332,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
       });
       updateBooking({
         ...booking,
-        to_location: undefined,
+        to: undefined,
       });
     }
   };

@@ -74,7 +74,7 @@ const Register = ({handleNext}: Props) => {
   return (
     <div className="min-h-fit bg-background">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <TextField name="username" label="Username" />
           <EmailField
             name="email"

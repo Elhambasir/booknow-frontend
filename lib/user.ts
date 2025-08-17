@@ -1,8 +1,55 @@
 import { fetchAPI } from "@/lib/api-wrapper";
 import { getStrapiURL } from "@/lib/get-strapi-url";
 import qs from "qs";
-import { TripType } from "@/types";
+import { BookingSelectInterface, TripType } from "@/types";
 import { currentUser } from "./utils";
+export const getUserBookings = async ({
+  searchParams,
+}: {
+  searchParams: { page: string; pageSize: string };
+}) => {
+  const user = await currentUser();
+  if (!user) return null;
+  if (!user?.jwt) return null;
+  const query = qs.stringify(
+    {
+      populate: {
+        package: true,
+        return: true,
+      },
+      pagination: {
+        page: searchParams?.page || 1,
+        pageSize: searchParams?.pageSize || 3,
+      },
+      filters: {
+        user: {
+          id: {
+            $eq: user?.id,
+          },
+        },
+        $or: [
+          {
+            booking: {
+              $null: true,
+            },
+          },
+        ],
+      },
+      sort: ["id:desc"],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const path = `/api/bookings?${query}`;
+  const BASE_URL = getStrapiURL();
+  const url = new URL(path, BASE_URL);
+  return await fetchAPI<BookingSelectInterface>(url.href, {
+    method: "GET",
+    authToken: user.jwt,
+  });
+};
+
 export const createUserDetails = async (
   payload: {
     phone_number: string;

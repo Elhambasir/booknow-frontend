@@ -8,9 +8,9 @@ import BookingsTab from "./BookingsTab";
 import PaymentsTab from "./PaymentsTab";
 import SettingsTab from "./SettingsTab";
 import { Calendar, CreditCard, Settings, User } from "lucide-react";
-import { UserDetails } from "@/types";
+import { BookingSelectInterface, UserDetails } from "@/types";
 import { signOut } from "next-auth/react";
-const UserProfilePage = ({ userDetails, tab } : { userDetails: UserDetails, tab?: string}) => {
+const UserProfilePage = ({ userDetails, tab, userBooking } : { userDetails: UserDetails, tab?: string, userBooking: BookingSelectInterface[]}) => {
   const defaultActiveTab = tab ?? "profile";
 
   const handleSignOut = () => {
@@ -19,7 +19,7 @@ const UserProfilePage = ({ userDetails, tab } : { userDetails: UserDetails, tab?
     };
   return (
     <div className="min-h-screen bg-muted/30">
-      <ProfileHeroSection />
+      <ProfileHeroSection userBooking={userBooking} />
       
       <section className="py-12 -mt-6">
         <div className="container mx-auto px-4">
@@ -57,7 +57,7 @@ const UserProfilePage = ({ userDetails, tab } : { userDetails: UserDetails, tab?
               </TabsList>
 
               <ProfileTab value="profile" userDetails={userDetails} />
-              <BookingsTab value="bookings" />
+              <BookingsTab value="bookings" userBooking={userBooking} />
               <PaymentsTab value="payments" />
               <SettingsTab value="settings" onLogout={handleSignOut} />
             </Tabs>

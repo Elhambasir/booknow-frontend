@@ -22,7 +22,7 @@ interface Props {
 }
 export default function Guest({ handleNext }: Props) {
   const [isPending, startTransition] = useTransition();
-  const { updateBooking, booking } = useBookingStore();
+  const { updateBooking } = useBookingStore();
   const form = useForm<GuesFormValues>({
     resolver: zodResolver(GuestSchema),
     defaultValues: {
@@ -30,7 +30,6 @@ export default function Guest({ handleNext }: Props) {
       gender: undefined,
       birth_date: undefined,
       phone_number: undefined,
-      flight_number: undefined,
       email: undefined,
       first_name: undefined,
       last_name: undefined,
@@ -166,14 +165,6 @@ export default function Guest({ handleNext }: Props) {
               ]}
             />
           </div>
-          <div className="space-y-2">
-            {" "}
-            <TextField
-              label="Flight Number (if applicable)"
-              name="flight_number"
-              placeholder="Enter your flight number"
-            />
-          </div>
         </div>
         <Button
           type="submit"
@@ -185,8 +176,7 @@ export default function Guest({ handleNext }: Props) {
             !form.watch("last_name") ||
             !form.watch("phone_number") ||
             !form.watch("birth_date") ||
-            !form.watch("gender") ||
-            !form.watch("flight_number")
+            !form.watch("gender")
           }
           className="w-full"
           size="lg"
