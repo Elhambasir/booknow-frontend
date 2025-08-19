@@ -2,7 +2,6 @@ import BlogSection from "@/components/BlogSection";
 import DriversSection from "@/components/DriversSection";
 import FAQSection from "@/components/FAQSection";
 import FleetSection from "@/components/FleetSection";
-import Footer from "@/components/Footer";
 import HeathrowSection from "@/components/HeathrowSection";
 import HeroSectionWithMap from "@/components/HeroSectionWithMap";
 import NewsletterSection from "@/components/NewsletterSection";
@@ -22,7 +21,6 @@ export default async function Home() {
       <BlogSection />
       <FAQSection />
       <NewsletterSection />
-      <Footer />
     </div>
   );
 }

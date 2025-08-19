@@ -30,9 +30,19 @@ export const EmailConfirmationSchema = z.object({
   otp: z.string().min(4, "OTP is required"),
 });
 
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(6, "Current is required"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    passwordConfirmation: z.string().min(6, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: "Passwords do not match",
+    path: ["passwordConfirmation"],
+  });
 export const ResetPasswordSchema = z
   .object({
-    code: z.string().min(6, "Codde is required"),
+    code: z.string().min(6, "Code is required"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     passwordConfirmation: z.string().min(6, "Please confirm your password"),
   })

@@ -5,7 +5,7 @@ import ProfileForm from "./ProfileForm";
 import { TabsContent } from "@/components/ui/tabs";
 import { UserDetails } from "@/types";
 
-const ProfileTab = ({ value, userDetails }: { value: string, userDetails: UserDetails }) => {
+const ProfileTab = ({ value, userDetails, totalTrips }: { value: string, userDetails: UserDetails, totalTrips: number }) => {
   return (
     <TabsContent value={value} className="space-y-6">
       <div className="grid lg:grid-cols-3 gap-6">
@@ -24,7 +24,7 @@ const ProfileTab = ({ value, userDetails }: { value: string, userDetails: UserDe
                   Member Since
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  Jan 2024
+                  {new Date(userDetails?.createdAt)?.toDateString()}
                 </span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
@@ -32,7 +32,7 @@ const ProfileTab = ({ value, userDetails }: { value: string, userDetails: UserDe
                   Total Trips
                 </span>
                 <span className="text-sm font-semibold text-primary">
-                  4
+                  {totalTrips}
                 </span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">

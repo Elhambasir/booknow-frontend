@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,7 +33,13 @@ export default function RootLayout({
         <Providers>
           <Navigation />
           {children}
-          <Toaster closeButton expand={false} position="top-center" richColors={true} />
+          <Toaster
+            closeButton
+            expand={false}
+            position="top-center"
+            richColors={true}
+          />
+          <Footer />
         </Providers>
       </body>
     </html>

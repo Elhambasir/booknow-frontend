@@ -1,10 +1,17 @@
-import { Bell, Eye, LogOut, Settings, Shield } from "lucide-react";
+import { Bell, LogOut, Settings, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { TabsContent } from "@/components/ui/tabs";
-
-const SettingsTab = ({ value, onLogout }: { value: string; onLogout: () => void }) => {
+import ChangePassword from "./ChangePasswordForm";
+import ReusableDialog from "@/components/ReusableDialog";
+const SettingsTab = ({
+  value,
+  onLogout,
+}: {
+  value: string;
+  onLogout: () => void;
+}) => {
   return (
     <TabsContent value={value} className="space-y-6">
       <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm">
@@ -39,9 +46,7 @@ const SettingsTab = ({ value, onLogout }: { value: string; onLogout: () => void 
                   <Shield className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium">
-                    Two-Factor Authentication
-                  </p>
+                  <p className="font-medium">Two-Factor Authentication</p>
                   <p className="text-sm text-muted-foreground">
                     Add an extra layer of security to your account
                   </p>
@@ -51,7 +56,7 @@ const SettingsTab = ({ value, onLogout }: { value: string; onLogout: () => void 
                 Enable
               </Button>
             </div>
-
+{/* 
             <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/20">
               <div className="flex items-center space-x-4">
                 <div className="p-2 rounded-lg bg-primary/10">
@@ -67,7 +72,7 @@ const SettingsTab = ({ value, onLogout }: { value: string; onLogout: () => void 
               <Button variant="outline" size="sm">
                 Manage
               </Button>
-            </div>
+            </div> */}
           </div>
 
           <div className="border-t pt-6">
@@ -75,17 +80,23 @@ const SettingsTab = ({ value, onLogout }: { value: string; onLogout: () => void 
               Danger Zone
             </h3>
             <div className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full justify-start text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
-              >
-                <Shield className="h-4 w-4 mr-2" />
-                Change Password
-              </Button>
+              <ReusableDialog
+                trigger={
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-destructive border-destructive hover:bg-destructive hover:text-white"
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Change Password
+                  </Button>
+                }
+                children={<ChangePassword />}
+              />
+
               <Button
                 variant="destructive"
                 onClick={onLogout}
-                className="w-full justify-start"
+                className="w-full justify-start text-white"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out

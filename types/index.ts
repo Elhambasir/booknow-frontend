@@ -43,6 +43,7 @@ export type IPackage = {
   documentId: string;
   image?: Image;
   order: number;
+  features: string[];
   price_options: {
     baseFare: number;
     perMin: number;
@@ -72,6 +73,7 @@ export type UserDetails = {
   email: string,
   first_name: string,
   last_name: string,
+  createdAt: Date;
   user_detail: {
     id?: number,
     phone_number: string,

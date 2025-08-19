@@ -8,20 +8,20 @@ import BookingsTab from "./BookingsTab";
 import PaymentsTab from "./PaymentsTab";
 import SettingsTab from "./SettingsTab";
 import { Calendar, CreditCard, Settings, User } from "lucide-react";
-import { BookingSelectInterface, UserDetails } from "@/types";
+import { UserDetails } from "@/types";
 import { signOut } from "next-auth/react";
-const UserProfilePage = ({ userDetails, tab, userBooking } : { userDetails: UserDetails, tab?: string, userBooking: BookingSelectInterface[]}) => {
+import { useState } from "react";
+const UserProfilePage = ({ userDetails, tab } : { userDetails: UserDetails, tab?: string }) => {
   const defaultActiveTab = tab ?? "profile";
-
+  const [totalTrips, settotalTrips] = useState(0);
   const handleSignOut = () => {
       signOut();
       toast.success("Logout successfully");
     };
   return (
     <div className="min-h-screen bg-muted/30">
-      <ProfileHeroSection userBooking={userBooking} />
-      
-      <section className="py-12 -mt-6">
+      <ProfileHeroSection />
+      <section className="py-8 -mt-6">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <Tabs defaultValue={defaultActiveTab} className="space-y-8">
@@ -56,8 +56,8 @@ const UserProfilePage = ({ userDetails, tab, userBooking } : { userDetails: User
                 </TabsTrigger>
               </TabsList>
 
-              <ProfileTab value="profile" userDetails={userDetails} />
-              <BookingsTab value="bookings" userBooking={userBooking} />
+              <ProfileTab value="profile" userDetails={userDetails} totalTrips={totalTrips} />
+              <BookingsTab value="bookings" settotalTrips={settotalTrips} />
               <PaymentsTab value="payments" />
               <SettingsTab value="settings" onLogout={handleSignOut} />
             </Tabs>

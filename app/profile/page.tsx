@@ -18,6 +18,6 @@ export default async function page({
     page, pageSize
   }} );
   return (
-    <UserProfilePage userDetails={user} tab={tab} userBooking={userBookings.data} />
+    <UserProfilePage userDetails={user} tab={tab} />
   )
 }

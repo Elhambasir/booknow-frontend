@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Footer from "@/components/Footer";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -58,9 +57,9 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-fit bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+      <section className="relative py-20 mt-5 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-md mx-auto">
@@ -134,7 +133,6 @@ const Login = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

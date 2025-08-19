@@ -167,16 +167,16 @@ const FleetSection = ({ vehicles }: Props) => {
                 </div>
 
                 {/* Features */}
-                {/* <div className="space-y-2">
+                <div className="space-y-2">
                   <p className="text-sm font-medium text-primary">Features:</p>
                   <div className="flex flex-wrap gap-2">
-                    {vehicle.features.map((feature, index) => (
+                    {vehicle?.features?.map((feature, index) => (
                       <Badge key={index} variant="outline" className="text-xs">
                         {feature}
                       </Badge>
                     ))}
                   </div>
-                </div> */}
+                </div>
 
                 {/* Price Display */}
                 <div className="bg-muted/50 rounded-lg p-4">

@@ -2,9 +2,7 @@ import { BookingSelectInterface } from "@/types";
 import { User } from "lucide-react";
 
 
-const ProfileHeroSection = ({
-  userBooking
-}: {userBooking: BookingSelectInterface[]}) => {
+const ProfileHeroSection = () => {
   return (
     <section className="relative py-20 overflow-hidden">
       <div className="absolute inset-0 bg-[var(--gradient-hero)]" />
@@ -23,12 +21,12 @@ const ProfileHeroSection = ({
           <h1 className="text-5xl font-bold text-primary mb-3">
             Welcome back
           </h1>
-          <p className="text-primary-muted text-lg mb-8">
+          <p className="text-primary-muted text-lg mb-auto">
             Manage your profile, track your journeys, and control your
             preferences
           </p>
 
-          <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
+          {/* <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">
                 {userBooking?.filter((b: BookingSelectInterface) => b.booking_status === "delivered").length}
@@ -47,7 +45,7 @@ const ProfileHeroSection = ({
               <div className="text-2xl font-bold text-primary">4.8</div>
               <div className="text-brand-gold/80 text-sm">Avg Rating</div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
