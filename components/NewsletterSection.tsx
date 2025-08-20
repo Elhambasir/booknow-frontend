@@ -1,34 +1,71 @@
-'use client';
-import { useState } from "react";
+"use client";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, CheckCircle, Gift, Star } from "lucide-react";
 import { toast } from "sonner";
+import { getStrapiURL } from "@/lib/get-strapi-url";
+import { fetchAPI, FetchAPIOptions } from "@/lib/api-wrapper";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
+  const [isPending, startTransition] = useTransition();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast("Please enter your email address to subscribe.");
-      return;
-    }
+    startTransition(async () => {
+      try {
+        const strapiUrl = getStrapiURL();
+        const options: FetchAPIOptions = {
+          method: "POST",
+          body: {
+            data: {
+              email
+            },
+          },
+        };
+        const response = await fetchAPI(`${strapiUrl}/api/subscribers`, options);
+        if ("status" in response && "statusText" in response) {
+          if(response?.message==='This attribute must be unique') {
+            toast.error("You already subscribed. Thank you");
+            return;
+          }
+          // This handles non-OK responses that returned a status object
+          throw new Error(response.message || "Subscribtion failed");
+        }
 
-    // Simulate subscription
-    setIsSubscribed(true);
-    setEmail("");
-
-    toast(
-      "Thank you for subscribing to our newsletter. You'll receive a welcome email shortly."
-    );
-
-    // Reset after 3 seconds for demo purposes
-    setTimeout(() => {
-      setIsSubscribed(false);
-    }, 3000);
+        toast.success("Sucessfull:", {
+          description: "You subscribed sucessfully",
+        });
+       
+        return;
+      } catch (error: any) {
+        if (error instanceof Error) {
+          // Handle errors thrown by fetchAPI
+          toast.error(error.message || "An unexpected error occurred");
+        } else if (typeof error === "object" && error !== null) {
+          // Handle the case where the API returned an error object
+          if ("message" in error) {
+            // Try to extract a more specific error message if available
+            const apiMessage = error.message;
+            if (
+              Array.isArray(apiMessage) &&
+              apiMessage[0]?.messages?.[0]?.message
+            ) {
+              toast.error(apiMessage[0].messages[0].message);
+            } else if (typeof apiMessage === "string") {
+              toast.error(apiMessage);
+            } else {
+              toast.error("Something went wrong.");
+            }
+          } else {
+            toast.error("An unexpected error occurred.");
+          }
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
+      }
+    });
   };
 
   const benefits = [
@@ -38,32 +75,32 @@ const NewsletterSection = () => {
     "Priority booking notifications",
   ];
 
-  if (isSubscribed) {
-    return (
-      <section className="py-20 bg-background">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-            <CardContent className="p-12 text-center">
-              <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-green-800 mb-4">
-                Welcome to Our Community!
-              </h2>
-              <p className="text-green-700 text-lg mb-6">
-                Thank you for subscribing to our newsletter. You'll receive
-                exclusive offers, travel tips, and updates about our premium
-                airport taxi service.
-              </p>
-              <div className="bg-white/50 rounded-lg p-4 inline-block">
-                <p className="text-green-600 font-medium">
-                  Check your inbox for a welcome email with a special discount!
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-    );
-  }
+  // if (isSubscribed) {
+  //   return (
+  //     <section className="py-20 bg-background">
+  //       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+  //         <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+  //           <CardContent className="p-12 text-center">
+  //             <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-6" />
+  //             <h2 className="text-3xl font-bold text-green-800 mb-4">
+  //               Welcome to Our Community!
+  //             </h2>
+  //             <p className="text-green-700 text-lg mb-6">
+  //               Thank you for subscribing to our newsletter. You'll receive
+  //               exclusive offers, travel tips, and updates about our premium
+  //               airport taxi service.
+  //             </p>
+  //             <div className="bg-white/50 rounded-lg p-4 inline-block">
+  //               <p className="text-green-600 font-medium">
+  //                 Check your inbox for a welcome email with a special discount!
+  //               </p>
+  //             </div>
+  //           </CardContent>
+  //         </Card>
+  //       </div>
+  //     </section>
+  //   );
+  // }
 
   return (
     <section className="py-20 bg-background">
@@ -113,10 +150,11 @@ const NewsletterSection = () => {
                 <Button
                   type="submit"
                   variant="secondary"
+                  disabled={isPending}
                   size="lg"
                   className="h-12 px-8 whitespace-nowrap"
                 >
-                  Subscribe Now
+                  {isPending?"Subscribing...":"Subscribe Now"}
                 </Button>
               </div>
             </form>

@@ -195,13 +195,13 @@ const FleetSection = ({ vehicles }: Props) => {
                 </div>
 
                 {/* CTA Button */}
-                <Button 
+                {/* <Button 
                   variant={vehicle.order===1 ? "hero" : "outline"} 
                   className="w-full"
                 >
                   Book This Vehicle
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                </Button> */}
               </CardContent>
             </Card>
           ))}

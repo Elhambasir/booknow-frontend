@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -126,10 +127,12 @@ const BlogSection = () => {
                   <h3 className="text-2xl font-bold text-primary">{post.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{post.excerpt}</p>
                   
-                  <Button variant="hero" className="w-fit">
-                    Read More
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  <Link href={`/blog/${post.id}`}>
+                    <Button variant="hero" className="w-fit">
+                      Read More
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </div>
@@ -174,10 +177,12 @@ const BlogSection = () => {
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-3">
                   {post.excerpt}
                 </p>
-                <Button variant="outline" size="sm" className="w-full">
-                  Read More
-                  <ArrowRight className="ml-2 h-3 w-3" />
-                </Button>
+                <Link href={`/blog/${post.id}`}>
+                  <Button variant="outline" size="sm" className="w-full">
+                    Read More
+                    <ArrowRight className="ml-2 h-3 w-3" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
@@ -191,10 +196,12 @@ const BlogSection = () => {
               <p className="text-muted-foreground mb-4">
                 Get the latest travel tips, airport news, and exclusive offers delivered to your inbox.
               </p>
-              <Button variant="hero">
-                View All Posts
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href="/blog">
+                <Button variant="hero">
+                  View All Posts
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>

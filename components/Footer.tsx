@@ -1,21 +1,26 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Clock, 
-  Facebook, 
-  Twitter, 
-  Instagram, 
+import { fetchAPI, FetchAPIOptions } from "@/lib/api-wrapper";
+import { getStrapiURL } from "@/lib/get-strapi-url";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Facebook,
+  Twitter,
+  Instagram,
   Linkedin,
-  Star
 } from "lucide-react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-
+  const [email, setEmail] = useState("");
+  const [isPending, startTransition] = useTransition();
   const footerLinks = {
     services: [
       { name: "Airport Transfers", href: "#" },
@@ -54,6 +59,65 @@ const Footer = () => {
     { name: "LinkedIn", icon: Linkedin, href: "#" },
   ];
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    startTransition(async () => {
+      try {
+        const strapiUrl = getStrapiURL();
+        const options: FetchAPIOptions = {
+          method: "POST",
+          body: {
+            data: {
+              email,
+            },
+          },
+        };
+        const response = await fetchAPI(
+          `${strapiUrl}/api/subscribers`,
+          options
+        );
+        if ("status" in response && "statusText" in response) {
+          if (response?.message === "This attribute must be unique") {
+            toast.error("You already subscribed. Thank you");
+            return;
+          }
+          // This handles non-OK responses that returned a status object
+          throw new Error(response.message || "Subscribtion failed");
+        }
+
+        toast.success("Sucessfull:", {
+          description: "You subscribed sucessfully",
+        });
+
+        return;
+      } catch (error: any) {
+        if (error instanceof Error) {
+          // Handle errors thrown by fetchAPI
+          toast.error(error.message || "An unexpected error occurred");
+        } else if (typeof error === "object" && error !== null) {
+          // Handle the case where the API returned an error object
+          if ("message" in error) {
+            // Try to extract a more specific error message if available
+            const apiMessage = error.message;
+            if (
+              Array.isArray(apiMessage) &&
+              apiMessage[0]?.messages?.[0]?.message
+            ) {
+              toast.error(apiMessage[0].messages[0].message);
+            } else if (typeof apiMessage === "string") {
+              toast.error(apiMessage);
+            } else {
+              toast.error("Something went wrong.");
+            }
+          } else {
+            toast.error("An unexpected error occurred.");
+          }
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
+      }
+    });
+  };
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Main Footer Content */}
@@ -67,8 +131,9 @@ const Footer = () => {
                 <span className="text-secondary">Taxi</span>
               </div>
               <p className="text-primary-foreground/80 leading-relaxed max-w-md">
-                The UK's premier airport taxi service, providing luxury transportation 
-                with professional chauffeurs. Available 24/7 for all your travel needs.
+                The UK's premier airport taxi service, providing luxury
+                transportation with professional chauffeurs. Available 24/7 for
+                all your travel needs.
               </p>
             </div>
 
@@ -188,14 +253,15 @@ const Footer = () => {
                 Get exclusive offers and travel tips delivered to your inbox.
               </p>
             </div>
-            <form className="flex gap-2">
+            <form className="flex gap-2" onSubmit={handleSubmit}>
               <Input
                 type="email"
                 placeholder="Enter your email"
+                onChange={(e) => setEmail(e.target.value)}
                 className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60"
               />
-              <Button variant="secondary" type="submit">
-                Subscribe
+              <Button disabled={isPending} variant="secondary" type="submit">
+                {isPending?"Subscribing...":"Subscribe"}
               </Button>
             </form>
           </div>
@@ -206,19 +272,27 @@ const Footer = () => {
           <div className="grid md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-2xl font-bold text-secondary">10K+</div>
-              <div className="text-sm text-primary-foreground/80">Happy Customers</div>
+              <div className="text-sm text-primary-foreground/80">
+                Happy Customers
+              </div>
             </div>
             <div>
               <div className="text-2xl font-bold text-secondary">5★</div>
-              <div className="text-sm text-primary-foreground/80">Average Rating</div>
+              <div className="text-sm text-primary-foreground/80">
+                Average Rating
+              </div>
             </div>
             <div>
               <div className="text-2xl font-bold text-secondary">24/7</div>
-              <div className="text-sm text-primary-foreground/80">Service Available</div>
+              <div className="text-sm text-primary-foreground/80">
+                Service Available
+              </div>
             </div>
             <div>
               <div className="text-2xl font-bold text-secondary">100%</div>
-              <div className="text-sm text-primary-foreground/80">Licensed & Insured</div>
+              <div className="text-sm text-primary-foreground/80">
+                Licensed & Insured
+              </div>
             </div>
           </div>
         </div>
@@ -232,7 +306,7 @@ const Footer = () => {
           <div className="text-sm text-primary-foreground/80">
             © {currentYear} AirportTaxi. All rights reserved.
           </div>
-          
+
           <div className="flex items-center space-x-6 text-sm text-primary-foreground/80">
             <span>Licensed by Transport for London</span>
             <span>•</span>

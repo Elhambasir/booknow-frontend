@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, Clock, Car, Headphones } from "lucide-react";
 // import heathrowAirport from '/images/heathrow-airport.png';
 import Image from "next/image";
+import Link from "next/link";
 
 const HeathrowSection = () => {
   const features = [
@@ -82,11 +83,8 @@ const HeathrowSection = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg" className="flex-1 sm:flex-none">
-                Book Heathrow Transfer
-              </Button>
-              <Button variant="outline-gold" size="lg" className="flex-1 sm:flex-none">
-                View All Airports
+              <Button type="button" asChild variant="hero" size="lg" className="flex-1 sm:flex-none">
+                <Link href={'/airports'} >View All Airports</Link>
               </Button>
             </div>
           </div>

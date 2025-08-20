@@ -239,3 +239,10 @@ export const RegisterSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const ContactFormSchema = z.object({
+  name: z.string().min(3),
+  email: z.email(),
+  phone: z.string().max(15),
+  description: z.string().max(255),
+});
