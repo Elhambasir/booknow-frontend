@@ -91,6 +91,8 @@ export interface BookingCreateInterface {
   luggages: number;
   from: Location | null;
   to: Location | null;
+  from_full_address: string,
+  to_full_address: string,
   date: Date;
   time: string;
   package?: IPackage;

@@ -13,12 +13,14 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { getStrapiURL } from "@/lib/get-strapi-url";
 import { useBookingStore } from "@/store/bookingStore";
+import { useRouter } from "next/navigation";
 interface Props {
-  handleNext: ()=> void;
+  handleNext: () => void;
 }
-const Register = ({handleNext}: Props) => {
+const Register = ({ handleNext }: Props) => {
   const [isPending, startTransition] = useTransition();
   const { updateBooking } = useBookingStore();
+  const router = useRouter();
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -38,7 +40,7 @@ const Register = ({handleNext}: Props) => {
         const response = await fetch(`${strapiUrl}/api/auth/local/register`, {
           method: "POST",
           headers: {
-              "Content-type": "Application/json"
+            "Content-type": "Application/json",
           },
           body: JSON.stringify({
             username: values.username,
@@ -49,7 +51,7 @@ const Register = ({handleNext}: Props) => {
         const res = await response.json();
         if (!response.ok) {
           toast.error(`Error:`, {
-            description: res.error.message??"Something went wrong",
+            description: res.error.message ?? "Something went wrong",
           });
           return;
         }
@@ -62,8 +64,7 @@ const Register = ({handleNext}: Props) => {
         toast.success("Sucessfull:", {
           description: "Moving to next step...",
         });
-        handleNext();
-        return;
+        router.push(`/auth/email-confirmation?email=${values.email}&source=booking`);
       } catch (error) {
         console.error("Something went wrong", error);
         toast.error("Something went wrong");

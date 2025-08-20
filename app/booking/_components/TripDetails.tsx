@@ -91,6 +91,8 @@ export default function TripDetails({ handleNext }: Props) {
           type: values.type,
           from: pickup,
           to: dropoff,
+          from_full_address: pickup?.address,
+          to_full_address: dropoff?.address,
           distance: distance,
           ETA: duration,
           date: values.date,

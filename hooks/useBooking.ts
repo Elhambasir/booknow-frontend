@@ -54,29 +54,12 @@ export const useBookings = ({
               $eq: status,
             },
           }),
-          ...(search && {
-            $or: [
-              {
-                from: {
-                  address: {
-                    $containsi: search,
-                  },
-                },
-              },
-              {
-                to: {
-                  address: {
-                    $containsi: search,
-                  },
-                },
-              },
-            ],
-          }),
         },
         sort: ["id:desc"],
       },
       {
         encodeValuesOnly: true,
+      
       }
     );
 

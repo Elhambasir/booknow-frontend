@@ -16,10 +16,14 @@ import { Button } from "@/components/ui/button";
 import OTPField from "@/components/form/OTPField";
 import { useSearchParams } from "next/navigation";
 import { ConfirmEmail, SendOtp } from "@/lib/auth";
+import { useBookingStore } from "@/store/bookingStore";
 
 function EmailConfirmationForm() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const source = searchParams.get("source");
+  const { currentStep, setCurrentStep } = useBookingStore();
+
   const [isPending, startTransition] = useTransition();
   const [isResending, startResending] = useTransition();
   const router = useRouter();
@@ -41,6 +45,11 @@ function EmailConfirmationForm() {
           throw new Error(response.message || "Email confirmation failed");
         }
         toast.success(response?.message || "Email confirmed seccuessfull");
+        if (source && source === "booking") {
+          handleNext();
+          router.push("/booking");
+          return;
+        }
         router.push("/auth/login");
       } catch (error: any) {
         console.error("Update error", error);
@@ -72,7 +81,11 @@ function EmailConfirmationForm() {
       }
     });
   };
-
+  const handleNext = () => {
+    if (currentStep) {
+        setCurrentStep(currentStep + 1);
+    }
+  };
   const handleResendCode = useCallback(() => {
     if (!email) {
       toast.error("No email address found");
@@ -148,12 +161,14 @@ function EmailConfirmationForm() {
           </form>
         </Form>
         <div className="mt-4 flex gap-5 justify-between flex-wrap text-center">
-          <Link
+          {!source&&(
+            <Link
             href="/auth/login"
             className="text-primary hover:underline font-semibold"
           >
             Back to Login
           </Link>
+          )}
           <Button
             variant="link"
             onClick={handleResendCode}

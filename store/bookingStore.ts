@@ -24,6 +24,8 @@ const initialBooking: BookingCreateInterface = {
   booking_status: 'pending',
   from: null,
   to: null,
+  from_full_address: '',
+  to_full_address: '',
   date: new Date(),
   time: "",
   passengers: 1,
