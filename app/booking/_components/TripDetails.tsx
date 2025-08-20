@@ -99,7 +99,7 @@ export default function TripDetails({ handleNext }: Props) {
           time: values.time+":00.000",
           passengers: Number(values.passengers),
           luggages: Number(values.luggages),
-          flight_number: values.flight_number,
+          flight_number: values.flight_number??'',
           return_date: values.return_date,
           return_time: values.return_time+":00.000",
           child_seat: Number(values.child_seat) || 0,

@@ -42,24 +42,22 @@ export const useBookings = ({
               $eq: session.user.id,
             },
           },
-          $or: [
-            {
-              booking: {
-                $null: true,
-              },
-            },
-          ],
           ...(status !== "all" && {
             booking_status: {
               $eq: status,
             },
+          }),
+          ...(search && {
+            $or: [
+              { to_fulll_address: { $containsi: search } },
+              { from_full_address: { $containsi: search } },
+            ],
           }),
         },
         sort: ["id:desc"],
       },
       {
         encodeValuesOnly: true,
-      
       }
     );
 

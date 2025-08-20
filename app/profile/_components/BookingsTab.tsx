@@ -10,12 +10,12 @@ import {
   Eye,
   Filter,
   MapPin,
-  // Search,
+  Search,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -34,7 +34,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { GenerateBookingPDF } from "@/lib/usePDF";
+// import { GenerateBookingPDF } from "@/lib/usePDF";
+import Link from "next/link";
 
 const getStatusBadgeClass = (status: string) => {
   switch (status.toLowerCase()) {
@@ -134,7 +135,7 @@ const BookingsTab = ({
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [bookingData, setBookingData] = useState(null);
-  const { jsPDFEnglish } = GenerateBookingPDF(bookingData);
+  // const { jsPDFEnglish } = GenerateBookingPDF(bookingData);
   const { data, isLoading, isError } = useBookings({
     page,
     pageSize,
@@ -149,11 +150,11 @@ const BookingsTab = ({
       setBookingData(data.data);
     }
   }, [data, settotalTrips]);
-  
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchTerm(e.target.value);
-  //   setPage(1); // Reset to first page when searching
-  // };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setPage(1); // Reset to first page when searching
+  };
 
   const handleStatusChange = (value: string) => {
     setStatusFilter(value);
@@ -176,7 +177,7 @@ const BookingsTab = ({
             </CardTitle>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              {/* <div className="relative">
+              <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search bookings..."
@@ -184,7 +185,7 @@ const BookingsTab = ({
                   onChange={handleSearch}
                   className="pl-10 w-full sm:w-64"
                 />
-              </div> */}
+              </div>
               <Select value={statusFilter} onValueChange={handleStatusChange}>
                 <SelectTrigger className="w-full sm:w-40">
                   <Filter className="h-4 w-4 mr-2" />
@@ -313,9 +314,11 @@ const BookingsTab = ({
                   ? "Try adjusting your search or filter criteria"
                   : "Your booking history will appear here"}
               </p>
-              <Button>
-                <Car className="h-4 w-4 mr-2" />
-                Book Your First Ride
+              <Button asChild>
+                <Link href="/booking">
+                  <Car className="h-4 w-4 mr-2" />
+                  Book Your First Ride
+                </Link>
               </Button>
             </div>
           )}
