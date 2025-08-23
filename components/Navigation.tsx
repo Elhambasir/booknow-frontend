@@ -47,7 +47,7 @@ const Navigation = () => {
           <div className="flex-shrink-0">
             <div className="text-2xl font-bold">
               <span className="text-primary">G&M</span>
-              <span className="text-secondary">Taxi</span>
+              <span className="text-secondary">Rides</span>
             </div>
           </div>
 

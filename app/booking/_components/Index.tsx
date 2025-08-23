@@ -146,8 +146,6 @@ const Index = ({ vehicles }: Props) => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

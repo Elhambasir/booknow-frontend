@@ -106,7 +106,6 @@ export interface BookingCreateInterface {
 
   // Optional fields for both 'one way' and 'return' booking types
   meet_greet: boolean;
-  child_seat: number;
   airport_fee: number;
   flight_number?: string;
   user?: IGuestUser;
@@ -141,6 +140,5 @@ export interface BookingSelectInterface {
 
   // Optional fields for both 'one way' and 'return' booking types
   meet_greet: boolean;
-  child_seat: number;
   airport_fee: number;
 }

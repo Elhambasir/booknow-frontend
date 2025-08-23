@@ -6,7 +6,6 @@ import { Star, Users, Clock, Shield, Award, Heart } from "lucide-react";
 const About = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       
       {/* Hero Section */}
       <section className="relative pt-20 pb-16 bg-gradient-to-br from-secondary via-secondary/80 to-primary overflow-hidden">
@@ -195,7 +194,6 @@ const About = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

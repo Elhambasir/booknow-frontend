@@ -96,7 +96,6 @@ const BlogDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       
       {/* Header */}
       <section className="pt-20 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
@@ -235,8 +234,6 @@ const BlogDetail = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

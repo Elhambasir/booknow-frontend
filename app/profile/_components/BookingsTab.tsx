@@ -1,19 +1,13 @@
-// components/BookingsTab.tsx
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Calendar,
   Car,
-  Clock,
-  Download,
-  Eye,
   Filter,
-  MapPin,
   Search,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -36,92 +30,8 @@ import {
 } from "@/components/ui/pagination";
 // import { GenerateBookingPDF } from "@/lib/usePDF";
 import Link from "next/link";
-
-const getStatusBadgeClass = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "checking":
-      return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
-    case "pending":
-      return "bg-orange-100 text-orange-800 hover:bg-orange-200";
-    case "reserved":
-      return "bg-purple-100 text-purple-800 hover:bg-purple-200";
-    case "picked up":
-      return "bg-blue-100 text-blue-800 hover:bg-blue-200";
-    case "delivered":
-      return "bg-green-100 text-green-800 hover:bg-green-200";
-    case "canceled":
-      return "bg-red-100 text-red-800 hover:bg-red-200";
-    default:
-      return "bg-gray-100 text-gray-800 hover:bg-gray-200";
-  }
-};
-
-const BookingCard = ({ booking }: { booking: any }) => (
-  <div className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all duration-200 hover:shadow-lg hover:scale-[1.01]">
-    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-      <div className="flex-1 space-y-3">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="font-medium text-sm">
-              {booking?.from?.address}
-            </span>
-          </div>
-          <div className="flex-1 border-t border-dashed border-muted-foreground/30"></div>
-          <Car className="h-4 w-4 text-primary" />
-          <div className="flex-1 border-t border-dashed border-muted-foreground/30"></div>
-          <div className="flex items-center space-x-2">
-            <span className="font-medium text-sm">{booking.to?.address}</span>
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center space-x-1">
-            <Calendar className="h-4 w-4" />
-            <span>{new Date(booking.date)?.toDateString()}</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Clock className="h-4 w-4" />
-            <span>{booking.time}</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Car className="h-4 w-4" />
-            <span>{booking.package?.name}</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <MapPin className="h-4 w-4" />
-            <span>
-              {booking.distance} • {booking?.ETA}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex lg:flex-col items-center lg:items-end gap-3 lg:text-right">
-        <div className="flex flex-col items-center lg:items-end">
-          <span className="text-2xl font-bold text-primary">
-            £{booking.amount.toFixed(2)}
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center lg:items-end gap-2">
-          <Badge className={getStatusBadgeClass(booking?.booking_status!)}>
-            {booking?.booking_status}
-          </Badge>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <Eye className="h-4 w-4 mr-1" />
-            Details
-          </Button>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+import BookingCard from "./BookingCard";
+import { Button } from "@/components/ui/button";
 
 const BookingsTab = ({
   value,
@@ -134,7 +44,6 @@ const BookingsTab = ({
   const [pageSize] = useState(3);
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [bookingData, setBookingData] = useState(null);
   // const { jsPDFEnglish } = GenerateBookingPDF(bookingData);
   const { data, isLoading, isError } = useBookings({
     page,
@@ -147,7 +56,6 @@ const BookingsTab = ({
   useEffect(() => {
     if (data?.meta?.pagination?.total !== undefined) {
       settotalTrips(data.meta.pagination.total);
-      setBookingData(data.data);
     }
   }, [data, settotalTrips]);
 
@@ -241,7 +149,6 @@ const BookingsTab = ({
                   {(() => {
                     const pageCount = data.meta.pagination.pageCount;
                     const currentPage = page;
-                    const pages = [];
 
                     // Always show first and last pages
                     const showPages = new Set([1, pageCount]);

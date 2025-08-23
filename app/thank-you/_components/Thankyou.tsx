@@ -57,7 +57,7 @@ export default function Thankyou() {
             </div>
             <h1 className="text-4xl font-bold text-white mb-2">Thank You!</h1>
             <p className="text-white/90 text-xl">
-              Your booking with G&M Taxi is confirmed
+              Your booking with G&M Rides is confirmed
             </p>
             <Badge
               variant={booking.type === "return" ? "secondary" : "default"}

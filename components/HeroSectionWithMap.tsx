@@ -80,7 +80,6 @@ const HeroSectionWithMap = () => {
           amount: 0,
           passengers: 1,
           luggages: 0,
-          child_seat: 0,
           meet_greet: false,
           airport_fee: airportFee,
         });
@@ -116,7 +115,7 @@ const HeroSectionWithMap = () => {
                 </span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                <span className="text-primary">G & M Airport</span>
+                <span className="text-primary">G & M Rides</span>
                 <br />
                 <span className="text-secondary">Taxi Service</span>
               </h1>

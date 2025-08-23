@@ -100,7 +100,6 @@ const Services = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       
       {/* Hero Section */}
       <section className="pt-20 pb-16 bg-gradient-to-br from-primary/5 to-secondary/5">
@@ -326,7 +325,6 @@ const Services = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

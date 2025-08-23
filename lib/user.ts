@@ -3,6 +3,45 @@ import { getStrapiURL } from "@/lib/get-strapi-url";
 import qs from "qs";
 import { BookingSelectInterface, TripType } from "@/types";
 import { currentUser } from "./utils";
+export const RescheduleBooking = async (
+  payload: {
+    date: any;
+    time: string;
+    return_date?: any;
+    return_time?: string;
+  },
+  documentId: string,
+  authToken: string
+) => {
+  const path = `/api/bookings/${documentId}`;
+  const BASE_URL = getStrapiURL();
+  const url = new URL(path, BASE_URL);
+  const body = {
+    data: {
+      ...payload,
+    },
+  };
+  return await fetchAPI(url.href, {
+    method: "PUT",
+    authToken,
+    body: body,
+  });
+};
+export const cancelBooking = async (id: string, reason: string, authToken: string) => {
+  const path = `/api/bookings/cancel-by-customer/${id}`;
+  const BASE_URL = getStrapiURL();
+  const url = new URL(path, BASE_URL);
+  return await fetchAPI<BookingSelectInterface>(url.href, {
+    method: "POST",
+    authToken,
+    body: {
+      data: {
+        cancel_reason: reason,
+      }
+    }
+  });
+}
+
 export const getUserBookings = async ({
   searchParams,
 }: {

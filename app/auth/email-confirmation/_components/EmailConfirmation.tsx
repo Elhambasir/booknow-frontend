@@ -210,7 +210,6 @@ const EmailConfirmationPage = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </div>
   );
 };

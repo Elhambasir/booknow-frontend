@@ -83,7 +83,6 @@ export const tripDetailsSchema = z.object({
   flight_number: z.string().optional(),
   return_date: z.any().optional(),
   return_time: z.string().optional(),
-  child_seat: z.string().min(0).optional(),
   meet_greet: z.boolean().optional(),
 });
 // export const CoordinatesSchema = z.object({
@@ -192,7 +191,6 @@ export const tripDetailsSchema = z.object({
 //     return_duration: z.number().optional(),
 //     return_amount: z.number().optional(),
 //     meet_greet: z.number().optional(),
-//     child_seat: z.number().optional(),
 //     flight_number: z.string().optional(),
 //     airport_fee: z.number().optional(),
 //   })

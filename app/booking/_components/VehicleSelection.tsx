@@ -18,7 +18,7 @@ export default function VehicleSelection({
 }: Props) {
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
   const { booking, updateBooking } = useBookingStore();
-  const { type, distance, ETA, meet_greet, child_seat } =
+  const { type, distance, ETA, meet_greet } =
   booking;
   const handleVehicleSelect = (
     vehicle: IPackage,
@@ -27,7 +27,6 @@ export default function VehicleSelection({
       from_amount: number;
       return_amount: number;
       meet_greet: number;
-      child_seat: number;
       subtotal: number;
       tax: number;
       airport_fee: number;
@@ -59,7 +58,6 @@ export default function VehicleSelection({
               ETA ?? 0,
               {
                 meet_greet: meet_greet ? 10 : 0,
-                child_seat: child_seat * 8,
                 airport_fee: booking.airport_fee,
               }
             );

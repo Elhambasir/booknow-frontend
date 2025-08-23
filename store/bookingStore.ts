@@ -12,7 +12,6 @@ interface BookingStore {
   clearBooking: () => void;
   // getBookingSummary: () => {
   //   subtotal: number;
-  //   child_seat: number | undefined;
   //   meetGreet: number;
   //   // airportSurcharge: number;
   //   total: number;
@@ -31,7 +30,6 @@ const initialBooking: BookingCreateInterface = {
   passengers: 1,
   luggages: 1,
   meet_greet: false,
-  child_seat: 0,
   airport_fee: 0,
   flight_number: "",
   distance: 0,
@@ -68,7 +66,7 @@ export const useBookingStore = create<BookingStore>()(
       // calculatePrice: () => {
       //   set((state) => {
       //     const { booking } = state;
-      //     const { from_package, from_distance, child_seat, meet_greet } =
+      //     const { from_package, from_distance, meet_greet } =
       //       booking;
 
       //     if (!from_package || !from_distance) {
@@ -94,7 +92,6 @@ export const useBookingStore = create<BookingStore>()(
       //     basePrice = Math.max(basePrice, PRICING_CONFIG.minimumFare);
 
       //     // Add-ons
-      //     const childSeatPrice = child_seat * PRICING_CONFIG.childSeatPrice;
       //     const meetGreetPrice = meet_greet ? PRICING_CONFIG.meetGreetPrice : 0;
 
       //     const totalPrice = basePrice + childSeatPrice + meetGreetPrice;
@@ -118,7 +115,6 @@ export const useBookingStore = create<BookingStore>()(
       //   const { booking } = get();
       //   return {
       //     subtotal: booking.basePrice,
-      //     child_seat: booking.child_seat,
       //     meetGreet: booking.meet_greet?10:0,
       //     total: booking.totalPrice,
       //   };

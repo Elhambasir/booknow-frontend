@@ -54,7 +54,6 @@ export default function TripDetails({ handleNext }: Props) {
       flight_number: booking?.flight_number || undefined,
       return_date: booking?.return_date || undefined,
       return_time: booking?.return_time || undefined,
-      child_seat: booking?.child_seat.toString() || undefined,
       meet_greet: booking?.meet_greet || false,
     },
   });
@@ -96,13 +95,12 @@ export default function TripDetails({ handleNext }: Props) {
           distance: distance,
           ETA: duration,
           date: values.date,
-          time: values.time+":00.000",
+          time: values.time + ":00.000",
           passengers: Number(values.passengers),
           luggages: Number(values.luggages),
-          flight_number: values.flight_number??'',
+          flight_number: values.flight_number ?? "",
           return_date: values.return_date,
-          return_time: values.return_time+":00.000",
-          child_seat: Number(values.child_seat) || 0,
+          return_time: values.return_time + ":00.000",
           meet_greet: values.meet_greet,
           airport_fee: airportFee,
         });
@@ -277,18 +275,6 @@ export default function TripDetails({ handleNext }: Props) {
                 }))}
               />
               <SelectField
-                name="child_seat"
-                label="Child Seat"
-                placeholder="Select Child Seats"
-                isRequired={true}
-                options={[...Array(4)].map((_, i) => ({
-                  value: i.toString(),
-                  label: `${i} child seat${i > 0 ? "s" : ""}`,
-                }))}
-              />
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <SelectField
                 name="luggages"
                 label="Luggages"
                 placeholder="Select Luggages"
@@ -298,12 +284,14 @@ export default function TripDetails({ handleNext }: Props) {
                   label: `${i} luggage${i > 0 ? "s" : ""}`,
                 }))}
               />
-              {(booking?.from?.isAirport||booking?.to?.isAirport)&&(
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {(booking?.from?.isAirport || booking?.to?.isAirport) && (
                 <TextField
-                name="flight_number"
-                label="Flight Number"
-                placeholder="Enter flight number"
-              />
+                  name="flight_number"
+                  label="Flight Number"
+                  placeholder="Enter flight number"
+                />
               )}
             </div>
 
@@ -327,21 +315,21 @@ export default function TripDetails({ handleNext }: Props) {
             )}
 
             {/* Additional Options */}
-            {(booking?.from?.isAirport||booking?.to?.isAirport)&&(
+            {(booking?.from?.isAirport || booking?.to?.isAirport) && (
               <div className="space-y-4 p-4 bg-muted/20 rounded-lg">
-              <h3 className="font-medium">Additional Options</h3>
-              <div className="flex items-center space-x-2 pt-2">
-                <CheckboxField
-                  name="meet_greet"
-                  label="Meet & Greet Service (+£10)"
-                  subLabel="(optional)"
-                  description="Choose this if you want"
-                  icon={<Handshake />}
-                />
+                <h3 className="font-medium">Additional Options</h3>
+                <div className="flex items-center space-x-2 pt-2">
+                  <CheckboxField
+                    name="meet_greet"
+                    label="Meet & Greet Service (+£10)"
+                    subLabel="(optional)"
+                    description="Choose this if you want"
+                    icon={<Handshake />}
+                  />
+                </div>
               </div>
-            </div>
             )}
-            
+
             <Button
               type="submit"
               disabled={

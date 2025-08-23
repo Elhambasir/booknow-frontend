@@ -64,8 +64,6 @@ const UserProfilePage = ({ userDetails, tab } : { userDetails: UserDetails, tab?
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };
