@@ -7,7 +7,6 @@ import {
   X,
   CalendarClock,
   MapPin,
-  Shield,
 } from "lucide-react";
 import ReusableDialog from "@/components/ReusableDialog";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +26,8 @@ function getStatusBadgeClass(status: string) {
       return "bg-gray-100 text-gray-800 hover:bg-gray-200";
   }
 }
-export default function BookingCard({ booking }: { booking: any }) {
+export default function BookingCard({ booking, refetchBooking }: { booking: any, refetchBooking: ()=> void }) {
+
   return (
     <div className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all duration-200 hover:shadow-lg hover:scale-[1.01]">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -92,7 +92,7 @@ export default function BookingCard({ booking }: { booking: any }) {
           <Eye className="h-4 w-4 mr-1" />
           Details
         </Button>
-        {booking.booking_status === "pending" && (
+        {(booking.booking_status === "pending"||booking.booking_status === "reserved") && (
           <ReusableDialog
             trigger={
               <Button
@@ -104,7 +104,7 @@ export default function BookingCard({ booking }: { booking: any }) {
                 Cancel
               </Button>
             }
-            children={<BookingCancelForm id={booking.documentId} />}
+            children={<BookingCancelForm id={booking.documentId} refetchBooking={refetchBooking} />}
           />
         )}
         {booking.booking_status === "pending" && (
@@ -119,7 +119,7 @@ export default function BookingCard({ booking }: { booking: any }) {
                 Reschedule
               </Button>
             }
-            children={<RescheduleForm booking={booking} />}
+            children={<RescheduleForm booking={booking} refetchBooking={refetchBooking} />}
           />
         )}
       </div>

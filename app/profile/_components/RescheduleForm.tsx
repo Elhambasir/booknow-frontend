@@ -46,9 +46,11 @@ const RescheduleFormSchema = z.object({
 
 export default function RescheduleForm({
   booking,
+  refetchBooking,
   onCancel,
 }: {
   booking: BookingSelectInterface;
+  refetchBooking: ()=> void;
   onCancel?: () => void;
 }) {
   const [isPending, startTransition] = useTransition();
@@ -85,7 +87,7 @@ export default function RescheduleForm({
           throw new Error(response.message || "Reschedule Booking failed");
         }
 
-        await revalidateMyPath(`/profile`);
+        refetchBooking();
         toast.success("Booking rescheduled successfully", {
           icon: <CheckCircle className="h-5 w-5 text-green-500" />,
           description: "Your booking has been updated with the new timing",

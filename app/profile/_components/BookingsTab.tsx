@@ -45,7 +45,7 @@ const BookingsTab = ({
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   // const { jsPDFEnglish } = GenerateBookingPDF(bookingData);
-  const { data, isLoading, isError } = useBookings({
+  const { data, isLoading, isError, refetch } = useBookings({
     page,
     pageSize,
     status: statusFilter !== "all" ? statusFilter : undefined,
@@ -68,7 +68,9 @@ const BookingsTab = ({
     setStatusFilter(value);
     setPage(1); // Reset to first page when changing status filter
   };
-
+  const refetchBooking = () => {
+    refetch();
+  }
   return (
     <TabsContent value={value} className="space-y-6">
       <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm">
@@ -130,7 +132,7 @@ const BookingsTab = ({
           ) : data?.data && data.data.length > 0 ? (
             <>
               {data.data.map((booking: any) => (
-                <BookingCard key={booking.id} booking={booking} />
+                <BookingCard key={booking.id} booking={booking} refetchBooking={refetchBooking} />
               ))}
 
               <Pagination className="mt-6">

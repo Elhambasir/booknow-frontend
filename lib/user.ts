@@ -36,7 +36,7 @@ export const cancelBooking = async (id: string, reason: string, authToken: strin
     authToken,
     body: {
       data: {
-        cancel_reason: reason,
+        reason: reason,
       }
     }
   });

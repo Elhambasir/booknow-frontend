@@ -36,9 +36,11 @@ const commonReasons = [
 
 export default function BookingCancelForm({
   id,
+  refetchBooking,
   onCancel,
 }: {
   id: string;
+  refetchBooking: ()=> void;
   onCancel?: () => void;
 }) {
   const [isPending, startTransition] = useTransition();
@@ -63,7 +65,7 @@ export default function BookingCancelForm({
           throw new Error(response.message || "Cancel Booking failed");
         }
 
-        await revalidateMyPath(`/profile`);
+        refetchBooking();
         toast.success("Booking cancelled successfully", {
           icon: <CheckCircle className="h-5 w-5 text-green-500" />,
         });
