@@ -72,7 +72,7 @@ export default function VehicleSelection({
                   <div className="grid sm:grid-cols-4 gap-4 sm:gap-6">
                     <div className="sm:col-span-2">
                       <img
-                        src={`${BASE_URL}${vehicle?.image?.url}`}
+                        src={`${vehicle?.image?.url}`}
                         alt={vehicle.name}
                         className="w-full h-32 object-cover rounded mb-4"
                       />

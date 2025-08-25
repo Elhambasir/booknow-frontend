@@ -1,5 +1,5 @@
 "use client";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +17,7 @@ import { Form } from "@/components/ui/form";
 import { getStrapiURL } from "@/lib/get-strapi-url";
 const Register = () => {
   const [isPending, startTransition] = useTransition();
+  const [isChecked, setIsChecked] = useState(false);
   const router = useRouter();
   const strapiUrl = getStrapiURL();
   // 1. Define your form.
@@ -33,20 +34,17 @@ const Register = () => {
   function onSubmit(values: z.infer<typeof RegisterSchema>) {
     startTransition(async () => {
       try {
-        const response = await fetch(
-          `${strapiUrl}/api/auth/local/register`,
-          {
-            method: "POST",
-            headers: {
-              "Content-type": "Application/json",
-            },
-            body: JSON.stringify({
-              username: values.username,
-              email: values.email,
-              password: values.password,
-            }),
-          }
-        );
+        const response = await fetch(`${strapiUrl}/api/auth/local/register`, {
+          method: "POST",
+          headers: {
+            "Content-type": "Application/json",
+          },
+          body: JSON.stringify({
+            username: values.username,
+            email: values.email,
+            password: values.password,
+          }),
+        });
 
         const res = await response.json();
         if (!response.ok) {
@@ -60,7 +58,7 @@ const Register = () => {
           return;
         }
         toast.success("Signed up successfully", {
-          description: res.message||"Email sent"
+          description: res.message || "Email sent",
         });
         router.push(`/auth/email-confirmation?email=${values.email}`);
       } catch (error: any) {
@@ -102,9 +100,9 @@ const Register = () => {
                 <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                   Create Your Account
                 </CardTitle>
-                <p className="text-muted-foreground">
+                {/* <p className="text-muted-foreground">
                   Join us for seamless booking experience and exclusive benefits
-                </p>
+                </p> */}
               </CardHeader>
               <CardContent>
                 <Form {...form}>
@@ -123,10 +121,70 @@ const Register = () => {
                       name="confirmPassword"
                       label="Confrim Password"
                     />
+                    <div className="flex flex-col gap-2 p-4 bg-white rounded-lg border border-gray-200 ">
+                      <div className="flex items-start gap-3">
+                        <div className="relative flex items-center justify-center mt-0.5">
+                          <input
+                            id="terms"
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => setIsChecked(!isChecked)}
+                            className="absolute opacity-0 h-0 w-0"
+                          />
+                          <div
+                            className={`flex items-center justify-center w-5 h-5 border-2 rounded-md transition-all duration-200 cursor-pointer
+              ${
+                isChecked
+                  ? "bg-primary border-primary shadow-sm"
+                  : "bg-white border-gray-300 hover:border-primary"
+              }`}
+                            onClick={() => setIsChecked(!isChecked)}
+                          >
+                            {isChecked && (
+                              <svg
+                                className="w-3.5 h-3.5 text-white"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={3}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <label
+                          htmlFor="terms"
+                          className="text-sm text-gray-700 flex flex-wrap items-center gap-1 cursor-pointer select-none"
+                        >
+                          I agree to the{" "}
+                          <Link
+                            href="/privacy"
+                            className="text-primary hover:text-primary hover:underline font-medium transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Privacy Policy
+                          </Link>
+                        </label>
+                      </div>
+                      <div
+                        id="terms-description"
+                        className="text-xs text-gray-500 pl-8 transition-all duration-200"
+                        style={{ opacity: isChecked ? 0.7 : 1 }}
+                      >
+                        You must agree before submitting.
+                      </div>
+                    </div>
+
                     <Button
                       type="submit"
                       className="w-full h-12 text-lg font-semibold"
-                      disabled={isPending}
+                      disabled={isPending || !isChecked}
                     >
                       {isPending ? "Signing Up..." : "Sign Up"}
                     </Button>
@@ -168,7 +226,6 @@ const Register = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };

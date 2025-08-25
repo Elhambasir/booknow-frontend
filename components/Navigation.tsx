@@ -23,7 +23,6 @@ const Navigation = () => {
     { name: "Airports", href: "/airports" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },
-    { name: "Our Privacy", href: "/privacy" },
     { name: "Book Now", href: "/booking" },
   ];
   const handleSignOut = () => {
@@ -71,7 +70,7 @@ const Navigation = () => {
           <div className="hidden lg:flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Phone className="h-4 w-4" />
-              <span>+44 20 7946 0958</span>
+              <span>(+44) 0208 900 9574</span>
             </div>
 
             {session ? (
@@ -154,7 +153,7 @@ const Navigation = () => {
               <div className="flex items-center space-x-2 px-3 py-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">
-                  +44 20 7946 0958
+                  (+44) 0208 900 9574
                 </span>
               </div>
               <div className="px-3">
