@@ -30,7 +30,7 @@ const Footer = () => {
       { name: "Event Transportation", href: "#" },
     ],
     company: [
-      { name: "About Us", href: "#about" },
+      { name: "About Us", href: "/about" },
       { name: "Our Fleet", href: "#fleet" },
       { name: "Our Drivers", href: "#drivers" },
       { name: "Careers", href: "#" },
@@ -44,8 +44,8 @@ const Footer = () => {
       { name: "Track Your Ride", href: "#" },
     ],
     legal: [
-      { name: "Terms of Service", href: "#" },
-      { name: "Privacy Policy", href: "#" },
+      // { name: "Terms of Service", href: "/privacy" },
+      { name: "Privacy Policy", href: "/privacy" },
       { name: "Cookie Policy", href: "#" },
       { name: "Accessibility", href: "#" },
       { name: "Complaints", href: "#" },
