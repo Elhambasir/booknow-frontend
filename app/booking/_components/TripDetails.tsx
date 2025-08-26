@@ -20,7 +20,7 @@ import { LocationService } from "@/services/locationService";
 import { toast } from "sonner";
 import { addYears } from "date-fns";
 import TextField from "@/components/form/TextField";
-
+import { ensureMilliseconds } from "@/lib/utils";
 type TripDetailsFormValues = z.infer<typeof tripDetailsSchema>;
 
 interface Props {
@@ -95,12 +95,12 @@ export default function TripDetails({ handleNext }: Props) {
           distance: distance,
           ETA: duration,
           date: values.date,
-          time: values.time + ":00.000",
+          time: ensureMilliseconds(values.time),
           passengers: Number(values.passengers),
           luggages: Number(values.luggages),
           flight_number: values.flight_number ?? "",
           return_date: values.return_date,
-          return_time: values.return_time + ":00.000",
+          return_time: values.return_time?ensureMilliseconds(values.return_time): undefined,
           meet_greet: values.meet_greet,
           airport_fee: airportFee,
         });

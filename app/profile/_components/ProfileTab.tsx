@@ -1,6 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
 import ProfileForm from "./ProfileForm";
 import { TabsContent } from "@/components/ui/tabs";
 import { UserDetails } from "@/types";
@@ -43,19 +41,6 @@ const ProfileTab = ({ value, userDetails, totalTrips }: { value: string, userDet
                   Airport transfers
                 </span>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-lg border-0 bg-gradient-to-br from-brand-gold/10 to-brand-gold/5">
-            <CardContent className="p-6 text-center">
-              <Star className="h-8 w-8 mx-auto mb-3 text-brand-gold" />
-              <h3 className="font-semibold mb-2">Premium Member</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Enjoy exclusive benefits and priority booking
-              </p>
-              <Button variant="outline" size="sm" className="w-full">
-                View Benefits
-              </Button>
             </CardContent>
           </Card>
         </div>
