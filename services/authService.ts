@@ -1,5 +1,7 @@
 import { fetchAPI } from "@/lib/api-wrapper";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { clientConfig } from "@/lib/config";
+
+const BASE_URL = clientConfig.NEXT_PUBLIC_API_URL;
 
 export const ChangeMyPassword = async (
   currentPassword: string,
@@ -8,7 +10,6 @@ export const ChangeMyPassword = async (
   authToken: string
 ) => {
   const path = `/api/auth/change-password`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI(url.href, {
     method: "POST",
@@ -26,7 +27,6 @@ export const ResetMyPassword = async (
   passwordConfirmation: string
 ) => {
   const path = `/api/auth/reset-password`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI(url.href, {
     method: "POST",
@@ -39,7 +39,6 @@ export const ResetMyPassword = async (
 };
 export const SendOtp = async (email: string) => {
   const path = `/api/auth/send-email-confirmation`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI(url.href, {
     method: "POST",
@@ -50,7 +49,6 @@ export const SendOtp = async (email: string) => {
 };
 export const ConfirmEmail = async (otp: string) => {
   const path = `/api/auth/email-confirmation?otp=${otp}`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI(url.href, {
     method: "GET",

@@ -14,7 +14,7 @@ import TextField from "@/components/form/TextField";
 import EmailField from "@/components/form/EmailField";
 import PhoneNumberField from "@/components/form/PhoneNumberField";
 import { fetchAPI, FetchAPIOptions } from "@/lib/api-wrapper";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { clientConfig } from "@/lib/config";
 import { useBookingStore } from "@/store/bookingStore";
 type GuesFormValues = z.infer<typeof GuestSchema>;
 interface Props {
@@ -39,7 +39,7 @@ export default function Guest({ handleNext }: Props) {
   const onSubmit = (values: GuesFormValues) => {
     startTransition(async () => {
       try {
-        const strapiUrl = getStrapiURL();
+        const strapiUrl = clientConfig.NEXT_PUBLIC_API_URL;
         const options: FetchAPIOptions = {
           method: "POST",
           body: {

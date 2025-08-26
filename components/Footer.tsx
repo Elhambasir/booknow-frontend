@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { fetchAPI, FetchAPIOptions } from "@/lib/api-wrapper";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { clientConfig } from "@/lib/config/client";
 import {
   Phone,
   Mail,
@@ -63,7 +63,7 @@ const Footer = () => {
     e.preventDefault();
     startTransition(async () => {
       try {
-        const strapiUrl = getStrapiURL();
+        const strapiUrl = clientConfig.NEXT_PUBLIC_API_URL;
         const options: FetchAPIOptions = {
           method: "POST",
           body: {

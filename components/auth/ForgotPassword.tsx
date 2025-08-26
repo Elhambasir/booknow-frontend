@@ -13,11 +13,11 @@ import { Form } from "@/components/ui/form";
 import { useTransition } from "react";
 import { Button } from "../ui/button";
 import EmailField from "../form/EmailField";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { clientConfig } from "@/lib/config";
 const ForgotPassword = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const strapiUrl = getStrapiURL();
+  const strapiUrl = clientConfig.NEXT_PUBLIC_API_URL;
   // Form setup
   const form = useForm<z.infer<typeof ForgotPasswordSchema>>({
     resolver: zodResolver(ForgotPasswordSchema),

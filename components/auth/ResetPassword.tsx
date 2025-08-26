@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 import PasswordField from "../form/PasswordField";
 import { useSearchParams } from "next/navigation";
 import OTPField from "../form/OTPField";
-import { ResetMyPassword } from "@/lib/auth";
+import { ResetMyPassword } from "@/services/authService";
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");

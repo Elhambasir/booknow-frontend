@@ -1,8 +1,6 @@
 "use client";
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import EmailField from "@/components/form/EmailField";
 import TextField from "@/components/form/TextField";
@@ -11,7 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { clientConfig } from "@/lib/config/client";
 import { fetchAPI, FetchAPIOptions } from "@/lib/api-wrapper";
 import TextareaField from "@/components/form/TextareaField";
 
@@ -32,7 +30,7 @@ const ContactForm = () => {
   function onSubmit(values: z.infer<typeof ContactFormSchema>) {
     startTransition(async () => {
       try {
-        const strapiUrl = getStrapiURL();
+        const strapiUrl = clientConfig.NEXT_PUBLIC_API_URL;
         const options: FetchAPIOptions = {
           method: "POST",
           body: {

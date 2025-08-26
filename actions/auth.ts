@@ -3,7 +3,7 @@
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { LoginSchema } from "@/lib/validationSchema";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { serverConfig } from "@/lib/config";
 type ActionResult =
   | {
       type: "success";
@@ -48,7 +48,7 @@ export async function authenticate(
     }
 
     const { identifier, password } = validatedFields.data;
-    const strapiUrl = getStrapiURL();
+    const strapiUrl = serverConfig.NEXT_PUBLIC_API_URL;
     // Authenticate with Strapi API
     const strapiResponse = await fetch(
       `${strapiUrl}/api/auth/local`,

@@ -5,7 +5,7 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cancelBooking } from "@/lib/user";
+import { cancelBooking } from "@/services/userService";
 import { revalidateMyPath } from "@/actions/revalidatePath";
 import { toast } from "sonner";
 import TextareaField from "@/components/form/TextareaField";

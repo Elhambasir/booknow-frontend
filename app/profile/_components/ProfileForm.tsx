@@ -7,59 +7,10 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUser, createUserDetails, updateUserDetails } from "@/lib/user";
+import { updateUser, createUserDetails, updateUserDetails } from "@/services/userService";
 import { useSession } from "next-auth/react";
 import { revalidateMyPath } from "@/actions/revalidatePath";
-const UserProfileFormSchema = z.object({
-  username: z
-    .string()
-    .min(3, { error: "Username must be at least 3 characters" })
-    .max(20, { error: "Username cannot exceed 20 characters" })
-    .regex(/^[a-zA-Z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores",
-    }),
-
-  email: z.email(),
-
-  first_name: z
-    .string()
-    .min(1, "Required")
-    .max(50, "First name cannot exceed 50 characters")
-    .regex(/^[a-zA-Z]+$/, {
-      message: "First name can only contain letters",
-    }),
-
-  last_name: z
-    .string()
-    .min(1, "required")
-    .max(50, "Last name cannot exceed 50 characters")
-    .regex(/^[a-zA-Z]+$/, {
-      message: "Last name can only contain letters",
-    }),
-
-  phone_number: z.string().regex(/^\+?[0-9\s\-]+$/, {
-    message: "Please enter a valid phone number",
-  }),
-
-  gender: z.string().min(1, "Required"),
-
-  birth_date: z
-    .date()
-    .max(new Date(), {
-      message: "Birth date cannot be in the future",
-    })
-    .refine(
-      (date) => {
-        const ageDiff = Date.now() - date.getTime();
-        const ageDate = new Date(ageDiff);
-        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-        return age >= 13;
-      },
-      {
-        message: "You must be at least 13 years old",
-      }
-    ),
-});
+import { UserProfileFormSchema } from "@/lib/validationSchema";
 
 import { User, Edit3 } from "lucide-react";
 import { toast } from "sonner";

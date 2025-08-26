@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Footer from "@/components/Footer";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -15,7 +14,7 @@ import { useTransition, Suspense, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import OTPField from "@/components/form/OTPField";
 import { useSearchParams } from "next/navigation";
-import { ConfirmEmail, SendOtp } from "@/lib/auth";
+import { ConfirmEmail, SendOtp } from "@/services/authService";
 import { useBookingStore } from "@/store/bookingStore";
 
 function EmailConfirmationForm() {

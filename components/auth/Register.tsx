@@ -14,12 +14,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { clientConfig } from "@/lib/config";
 const Register = () => {
   const [isPending, startTransition] = useTransition();
   const [isChecked, setIsChecked] = useState(false);
   const router = useRouter();
-  const strapiUrl = getStrapiURL();
+  const strapiUrl = clientConfig.NEXT_PUBLIC_API_URL;
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),

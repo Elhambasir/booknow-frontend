@@ -11,7 +11,7 @@ import { Form } from "@/components/ui/form";
 import { useTransition, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import PasswordField from "@/components/form/PasswordField";
-import { ChangeMyPassword } from "@/lib/auth";
+import { ChangeMyPassword } from "@/services/authService";
 import { signOut, useSession } from "next-auth/react";
 function ChangePasswordForm() {
   const [isPending, startTransition] = useTransition();
