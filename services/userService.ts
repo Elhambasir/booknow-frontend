@@ -1,8 +1,9 @@
 import { fetchAPI } from "@/lib/api-wrapper";
-import { getStrapiURL } from "@/lib/get-strapi-url";
 import qs from "qs";
 import { BookingSelectInterface, TripType } from "@/types";
-import { currentUser } from "./utils";
+import { currentUser } from "@/lib/utils";
+import { serverConfig } from "@/lib/config/server";
+const BASE_URL = serverConfig.NEXT_PUBLIC_API_URL;
 export const RescheduleBooking = async (
   payload: {
     date: any;
@@ -14,7 +15,6 @@ export const RescheduleBooking = async (
   authToken: string
 ) => {
   const path = `/api/bookings/${documentId}`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   const body = {
     data: {
@@ -29,7 +29,6 @@ export const RescheduleBooking = async (
 };
 export const cancelBooking = async (id: string, reason: string, authToken: string) => {
   const path = `/api/bookings/cancel-by-customer/${id}`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI<BookingSelectInterface>(url.href, {
     method: "POST",
@@ -81,7 +80,6 @@ export const getUserBookings = async ({
     }
   );
   const path = `/api/bookings?${query}`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI<BookingSelectInterface>(url.href, {
     method: "GET",
@@ -99,7 +97,6 @@ export const createUserDetails = async (
   authToken: string
 ) => {
   const path = `/api/user-details`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   const body = {
     data: payload,
@@ -120,7 +117,6 @@ export const updateUserDetails = async (
   authToken: string
 ) => {
   const path = `/api/user-details/${documentId}`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   const body = {
     data: {
@@ -144,7 +140,6 @@ export const updateUser = async (
   authToken: string
 ) => {
   const path = `/api/users/${id}`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI(url.href, {
     method: "PUT",
@@ -156,7 +151,6 @@ export const updateUser = async (
 // Get user by id
 export const getUserById = async (id: string, authToken: string) => {
   const path = `/api/users/${id}?populate[user_detail]=true`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI(url.href, {
     method: "GET",
@@ -166,7 +160,6 @@ export const getUserById = async (id: string, authToken: string) => {
 // Get user by identifier
 export const getUserByIdentifier = async (identifier: string) => {
   const path = "/api/auth/local";
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
 
   return await fetchAPI(url.href, {
@@ -183,7 +176,6 @@ export const getUserProfile = async () => {
     populate: ["user_detail"],
   });
   const path = "/api/users/me?" + query;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
 
   if (!user) return null;
@@ -234,7 +226,6 @@ export const getBookings = async ({
     }
   );
   const path = `/api/bookings?${query}`;
-  const BASE_URL = getStrapiURL();
   const url = new URL(path, BASE_URL);
   return await fetchAPI<TripType>(url.href, {
     method: "GET",

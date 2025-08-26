@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/lib/validationSchema";
-import { getStrapiURL } from "./lib/get-strapi-url";
+import { serverConfig } from "./lib/config";
 export default {
   trustHost: true,
   providers: [
@@ -10,7 +10,7 @@ export default {
         const validatedFields = LoginSchema.safeParse(credentials);
         if (validatedFields.success) {
           const { identifier, password } = validatedFields.data;
-          const strapiUrl = getStrapiURL();
+          const strapiUrl = serverConfig.NEXT_PUBLIC_API_URL
           try {
             const response = await fetch(
               `${strapiUrl}/api/auth/local`,

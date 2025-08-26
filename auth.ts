@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
-import { getUserById } from "@/lib/user";
+import { getUserById } from "@/services/userService";
 
 export const {
   handlers: { GET, POST },

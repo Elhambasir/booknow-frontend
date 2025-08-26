@@ -1,6 +1,6 @@
 import React from 'react'
 import UserProfilePage from './_components/Index'
-import { getUserById } from '@/lib/user'
+import { getUserById } from '@/services/userService';
 import { auth } from '@/auth';
 export default async function page({
   searchParams,

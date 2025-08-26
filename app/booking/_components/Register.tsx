@@ -11,13 +11,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import { getStrapiURL } from "@/lib/get-strapi-url";
+import { clientConfig } from "@/lib/config/client";
 import { useBookingStore } from "@/store/bookingStore";
 import { useRouter } from "next/navigation";
-interface Props {
-  handleNext: () => void;
-}
-const Register = ({ handleNext }: Props) => {
+
+const Register = () => {
   const [isPending, startTransition] = useTransition();
   const { updateBooking } = useBookingStore();
   const router = useRouter();
@@ -35,7 +33,7 @@ const Register = ({ handleNext }: Props) => {
   function onSubmit(values: z.infer<typeof RegisterSchema>) {
     startTransition(async () => {
       try {
-        const strapiUrl = getStrapiURL();
+        const strapiUrl = clientConfig.NEXT_PUBLIC_API_URL;
 
         const response = await fetch(`${strapiUrl}/api/auth/local/register`, {
           method: "POST",

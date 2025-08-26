@@ -5,8 +5,7 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RescheduleBooking } from "@/lib/user";
-import { revalidateMyPath } from "@/actions/revalidatePath";
+import { RescheduleBooking } from "@/services/userService";
 import { toast } from "sonner";
 import {
   Clock,

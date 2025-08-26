@@ -3,11 +3,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchAPI } from "@/lib/api-wrapper";
-import { getStrapiURL } from "@/lib/get-strapi-url";
 import qs from "qs";
 import { BookingSelectInterface } from "@/types";
 import { useSession } from "next-auth/react";
-
+import { clientConfig } from "@/lib/config";
 interface BookingsQueryParams {
   page?: number;
   pageSize?: number;
@@ -62,7 +61,7 @@ export const useBookings = ({
     );
 
     const path = `/api/bookings?${query}`;
-    const BASE_URL = getStrapiURL();
+    const BASE_URL = clientConfig.NEXT_PUBLIC_API_URL;
     const url = new URL(path, BASE_URL);
     return await fetchAPI<{
       data: BookingSelectInterface[];

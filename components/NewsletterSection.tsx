@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, CheckCircle, Gift, Star } from "lucide-react";
 import { toast } from "sonner";
-import { getStrapiURL } from "@/lib/get-strapi-url";
 import { fetchAPI, FetchAPIOptions } from "@/lib/api-wrapper";
+import { clientConfig } from "@/lib/config";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const NewsletterSection = () => {
     e.preventDefault();
     startTransition(async () => {
       try {
-        const strapiUrl = getStrapiURL();
+        const strapiUrl = clientConfig.NEXT_PUBLIC_API_URL;
         const options: FetchAPIOptions = {
           method: "POST",
           body: {
