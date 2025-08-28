@@ -79,7 +79,6 @@ function ProfileForm({ userDetails }: Props) {
             );
           }
         } else {
-          debugger;
           const createUserDetailsResponse = await createUserDetails(
             {
               phone_number: values.phone_number,

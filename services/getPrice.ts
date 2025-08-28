@@ -14,14 +14,13 @@ export const getPrice = (
 
   try {
     const { baseFare, perMin, commission, distanceBands } = price_options;
-
     const calculatedPrices = calculateFare({
       distanceInMiles: distance,
       estimatedTimeInMinutes: duration,
       distanceBands,
       baseFare,
       perMinuteRate: perMin,
-      bookingFee: commission,
+      commission,
     });
 
     const meet_greet = type === "one way" ? options?.meet_greet ?? 0 : 0;
