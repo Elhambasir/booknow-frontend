@@ -15,14 +15,14 @@ import {
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select"; // Adjust import paths as needed
+} from "@/components/ui/select";
 
 interface SelectFieldProps {
   name: string;
   label: string;
   placeholder?: string;
   options: Array<{ value: string; label: string; disabled?: boolean }>;
-  description?: React.ReactNode; // Optional description
+  description?: React.ReactNode;
   isRequired?: boolean;
 }
 
@@ -53,7 +53,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
+            <SelectContent position="popper"> {/* Add this prop */}
               {options?.map((option, index) => (
                 <SelectItem
                   disabled={option.disabled}

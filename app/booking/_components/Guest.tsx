@@ -44,7 +44,13 @@ export default function Guest({ handleNext }: Props) {
           method: "POST",
           body: {
             data: {
-              ...values,
+              username: values.email,
+              email: values.email,
+              first_name: values.first_name,
+              last_name: values.last_name,
+              phone_number: values.phone_number,
+              birth_date: values.birth_date,
+              gender: values.gender,
             },
           },
         };
@@ -102,24 +108,6 @@ export default function Guest({ handleNext }: Props) {
         <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <TextField
-              name="username"
-              label="Username"
-              placeholder="Enter username"
-              isRequired={true}
-            />
-          </div>
-          <div className="space-y-2">
-            <EmailField
-              label="Email"
-              name="email"
-              placeholder="example@gmail.com"
-              isRequired={true}
-            />
-          </div>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <TextField
               name="first_name"
               label="First Name"
               placeholder="Enter first name"
@@ -137,6 +125,14 @@ export default function Guest({ handleNext }: Props) {
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
+            <EmailField
+              label="Email"
+              name="email"
+              placeholder="example@gmail.com"
+              isRequired={true}
+            />
+          </div>
+          <div className="space-y-2">
             <PhoneNumberField
               label="Phone Number"
               name="phone_number"
@@ -144,6 +140,8 @@ export default function Guest({ handleNext }: Props) {
               isRequired={true}
             />
           </div>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <DatePickerField
               label="Date of Birth"
@@ -151,8 +149,6 @@ export default function Guest({ handleNext }: Props) {
               isRequired={true}
             />
           </div>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <SelectField
               label="Gender"
@@ -170,7 +166,6 @@ export default function Guest({ handleNext }: Props) {
           type="submit"
           disabled={
             isPending ||
-            !form.watch("username") ||
             !form.watch("email") ||
             !form.watch("first_name") ||
             !form.watch("last_name") ||

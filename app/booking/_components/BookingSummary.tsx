@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, MapPin, NavigationIcon } from "lucide-react";
 import React from "react";
 import { useBookingStore } from "@/store/bookingStore";
+import { removeMilliseconds } from "@/lib/utils";
 
 export default function BookingSummary() {
   const booking = useBookingStore((state) => state.booking);
@@ -37,7 +38,7 @@ export default function BookingSummary() {
                   {booking.date
                     ? new Date(booking.date!).toDateString()
                     : "N/A"}{" "}
-                  {booking.time}
+                  {removeMilliseconds(booking.time)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">

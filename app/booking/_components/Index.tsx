@@ -137,7 +137,7 @@ const Index = ({ vehicles }: Props) => {
 
             {/* Right Sidebar */}
             <div className="space-y-6">
-              <BookingSummary />
+              {currentStep > 0 && <BookingSummary />}
               <DirectionMap
                 pickup={booking?.from!}
                 dropoff={booking.to!}

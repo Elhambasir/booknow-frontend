@@ -23,7 +23,7 @@ const Navigation = () => {
     { name: "Airports", href: "/airports" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },
-    { name: "Book Now", href: "/booking" },
+    { name: "Basket", href: "/booking" },
   ];
   const handleSignOut = () => {
     signOut();

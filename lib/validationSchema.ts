@@ -206,7 +206,7 @@ export const tripDetailsSchema = z.object({
 //   )
 
 export const GuestSchema = z.object({
-  username: z.string(),
+  username: z.string().optional(),
   gender: z.string(),
   birth_date: z.date(),
   phone_number: z.string(),

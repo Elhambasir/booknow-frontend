@@ -80,7 +80,7 @@ export default function VehicleSelection({
                     <div className="sm:col-span-2 space-y-2 sm:space-y-4">
                       <div>
                         <h3 className="text-xl font-bold mb-2">
-                          {vehicle.name}
+                          {vehicle.type}
                         </h3>
                         {/* <p className="text-muted-foreground">
                           {vehicle?.description}
