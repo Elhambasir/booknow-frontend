@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import ProfileHeroSection from "./ProfileHeroSection";
 import ProfileTab from "./ProfileTab";
 import BookingsTab from "./BookingsTab";
-import PaymentsTab from "./PaymentsTab";
+import InvoicesTab from "./InvoicesTab";
 import SettingsTab from "./SettingsTab";
 import { Calendar, CreditCard, Settings, User } from "lucide-react";
 import { UserDetails } from "@/types";
@@ -14,6 +14,7 @@ import { useState } from "react";
 const UserProfilePage = ({ userDetails, tab } : { userDetails: UserDetails, tab?: string }) => {
   const defaultActiveTab = tab ?? "profile";
   const [totalTrips, settotalTrips] = useState(0);
+  const [totalInvoices, setTotalInvoices] = useState(0);
   const handleSignOut = () => {
       signOut();
       toast.success("Logout successfully");
@@ -58,7 +59,7 @@ const UserProfilePage = ({ userDetails, tab } : { userDetails: UserDetails, tab?
 
               <ProfileTab value="profile" userDetails={userDetails} totalTrips={totalTrips} />
               <BookingsTab value="bookings" settotalTrips={settotalTrips} />
-              <PaymentsTab value="payments" />
+              <InvoicesTab value="payments" setTotalInvoices={setTotalInvoices} />
               <SettingsTab value="settings" onLogout={handleSignOut} />
             </Tabs>
           </div>
