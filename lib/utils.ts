@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import { auth } from "@/auth";
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 export const currentUser = async () => {
   const session = await auth();
@@ -18,7 +18,7 @@ export const currentUser = async () => {
  */
 export function ensureMilliseconds(time: string): string {
   // If the string already ends with :00.000, return it
-  if (time.endsWith(':00.000')) {
+  if (time.endsWith(":00.000")) {
     return time;
   }
 
@@ -42,25 +42,37 @@ export function ensureMilliseconds(time: string): string {
  * @returns The time string without milliseconds, or original string if invalid format
  */
 export function removeMilliseconds(timeString: string): string {
-  if (!timeString || typeof timeString !== 'string') {
+  if (!timeString || typeof timeString !== "string") {
     return timeString;
   }
-  
+
   // Split by colon to check time format
-  const parts = timeString.split(':');
-  
+  const parts = timeString.split(":");
+
   // Valid time formats should have 2-3 parts (HH:MM or HH:MM:SS)
   if (parts.length < 2 || parts.length > 3) {
     return timeString;
   }
-  
+
   // Check if the last part contains milliseconds
   const lastPart = parts[parts.length - 1];
-  if (lastPart.includes('.')) {
-    const [seconds] = lastPart.split('.');
+  if (lastPart.includes(".")) {
+    const [seconds] = lastPart.split(".");
     parts[parts.length - 1] = seconds;
-    return parts.join(':');
+    return parts.join(":");
   }
-  
+
   return timeString;
 }
+
+// Convert 24-hour time (from native input) to 12-hour time with AM/PM
+export const to12HourFormat = (time: string): string => {
+  if (!time) return "";
+  const [hours, minutes] = time.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const adjustedHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+  return `${String(adjustedHours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0"
+  )} ${period}`;
+};

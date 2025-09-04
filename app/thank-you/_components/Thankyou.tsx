@@ -17,6 +17,8 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
 import { useLocationStore } from "@/store/useLocationStore";
 import { Badge } from "@/components/ui/badge";
+import { removeMilliseconds, to12HourFormat } from "@/lib/utils";
+
 export default function Thankyou() {
   const { booking, clearBooking } = useBookingStore();
   const { clearLocations } = useLocationStore();
@@ -112,7 +114,7 @@ export default function Thankyou() {
                     <p className="text-muted-foreground">
                       {" "}
                       {booking.date &&
-                        new Date(booking.date).toDateString()} at {booking.time}
+                        new Date(booking.date).toDateString()} at {to12HourFormat(removeMilliseconds(booking.time))}
                     </p>
                   </div>
                 </div>

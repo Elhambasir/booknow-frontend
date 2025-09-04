@@ -71,6 +71,7 @@ const BookingsTab = ({
   const refetchBooking = () => {
     refetch();
   }
+  console.log("my booking", data);
   return (
     <TabsContent value={value} className="space-y-6">
       <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm">

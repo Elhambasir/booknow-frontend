@@ -18,7 +18,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { AddressSearch } from "./AddressSearch";
-import { addYears } from "date-fns";
+import { addYears, startOfToday } from "date-fns";
 type TripFormValues = z.infer<typeof tripSchema>;
 
 const HeroSectionWithMap = () => {
@@ -211,7 +211,7 @@ const HeroSectionWithMap = () => {
                         label="Pickup Date"
                         isRequired={true}
                         maxDate={addYears(new Date(), 1)}
-                        minDate={new Date()}
+                        minDate={startOfToday()}
                         yearRange={1}
                       />
                       <TimePickerField

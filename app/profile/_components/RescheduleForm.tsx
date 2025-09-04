@@ -34,7 +34,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { addYears } from "date-fns";
+import { addYears, startOfToday } from "date-fns";
+import { removeMilliseconds, to12HourFormat } from "@/lib/utils";
 
 const RescheduleFormSchema = z.object({
   date: z.any(),
@@ -158,7 +159,7 @@ export default function RescheduleForm({
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Pickup Time:</span>
-            <span className="font-medium">{booking.time}</span>
+            <span className="font-medium">{to12HourFormat(removeMilliseconds(booking.time))}</span>
           </div>
           {booking.type === "return" && booking.return_date && (
             <>
@@ -218,7 +219,7 @@ export default function RescheduleForm({
                 placeholder="Select new date"
                 isRequired
                 maxDate={addYears(new Date(), 1)}
-                minDate={new Date()}
+                minDate={startOfToday()}
                 yearRange={1}
               />
               <TimePickerField

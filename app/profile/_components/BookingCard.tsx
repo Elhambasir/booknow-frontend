@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import BookingCancelForm from "./BookingCancelForm";
 import RescheduleForm from "./RescheduleForm";
+import { removeMilliseconds, to12HourFormat } from "@/lib/utils";
 // Helper function for status badge classes (if not already defined)
 function getStatusBadgeClass(status: string) {
   switch (status.toLowerCase()) {
@@ -55,7 +56,7 @@ export default function BookingCard({ booking, refetchBooking }: { booking: any,
             </div>
             <div className="flex items-center space-x-1">
               <Clock className="h-4 w-4" />
-              <span>{booking.time}</span>
+              <span>{to12HourFormat(removeMilliseconds(booking.time))}</span>
             </div>
             <div className="flex items-center space-x-1">
               <Car className="h-4 w-4" />

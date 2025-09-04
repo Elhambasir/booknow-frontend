@@ -45,7 +45,6 @@ export default function DatePickerField({
   className,
 }: DatePickerFieldProps) {
   const form = useFormContext();
-
   return (
     <FormField
       control={form.control}
@@ -79,17 +78,24 @@ export default function DatePickerField({
                 <Calendar
                   mode="single"
                   selected={field.value}
-                  onSelect={field.onChange}
-                  disabled={(date) => 
-                    date > maxDate || 
+                  onSelect={(value) => {
+                     const dateOnly = format(value!, "yyyy-MM-dd");
+                     field.onChange(dateOnly);
+                  }}
+                  disabled={(date) =>
+                    date > maxDate ||
                     date < minDate ||
-                    disabledDates.some(disabledDate => 
-                      startOfDay(disabledDate).getTime() === startOfDay(date).getTime()
+                    disabledDates.some(
+                      (disabledDate) =>
+                        startOfDay(disabledDate).getTime() ===
+                        startOfDay(date).getTime()
                     )
                   }
                   fromYear={maxDate.getFullYear() - yearRange}
                   toYear={maxDate.getFullYear()}
-                  captionLayout={showYearDropdown ? "dropdown" : "dropdown-months"}
+                  captionLayout={
+                    showYearDropdown ? "dropdown" : "dropdown-months"
+                  }
                 />
               </PopoverContent>
             </Popover>

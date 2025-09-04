@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { removeMilliseconds, to12HourFormat } from "./utils";
 
 export function GenerateBookingPDF(bookingData: any) {
   async function jsPDFEnglish() {
@@ -58,7 +59,7 @@ export function GenerateBookingPDF(bookingData: any) {
       // Basic Info Table - FIXED: Handle undefined values
       const basicInfo = [
         ["Booking Date", booking.date ? new Date(booking.date).toLocaleDateString() : "N/A"],
-        ["Pickup Time", booking.time || "N/A"],
+        ["Pickup Time", to12HourFormat(removeMilliseconds(booking.time)) || "N/A"],
         ["Passengers", booking.passengers?.toString() || "0"],
         ["Luggages", booking.luggages?.toString() || "0"],
         ["Distance", booking.distance ? `${booking.distance} km` : "N/A"],
