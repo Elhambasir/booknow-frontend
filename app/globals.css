@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
+/* global.css */
+  html body[data-scroll-locked] {
+    overflow: visible !important;
+    margin-right: 0 !important;
+  } 
 @custom-variant dark (&:is(.dark *));
 /* Hide default time picker icon in Chrome, Safari, Edge */
 .hide-time-icon::-webkit-calendar-picker-indicator {

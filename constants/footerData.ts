@@ -25,7 +25,7 @@ export const footerData = {
 
   links: {
     services: [
-      { name: "Airport Transfers", href: "#" },
+      { name: "Airport Transfers", href: "airports" },
       { name: "Corporate Travel", href: "#" },
       { name: "Long Distance", href: "#" },
       { name: "Wedding Transport", href: "#" },
@@ -36,7 +36,7 @@ export const footerData = {
       { name: "Our Fleet", href: "#fleet" },
       { name: "Our Drivers", href: "#drivers" },
       { name: "Careers", href: "#" },
-      { name: "Contact", href: "#contact" },
+      { name: "Contact", href: "/contact" },
     ],
     support: [
       { name: "Help Center", href: "#" },

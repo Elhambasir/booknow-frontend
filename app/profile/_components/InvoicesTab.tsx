@@ -44,7 +44,6 @@ const InvoicesTab = ({ value, setTotalInvoices }: InvoicesTabProps) => {
     status: statusFilter !== "all" ? statusFilter : undefined,
     search: searchTerm,
   });
-
   // Transform bookings to invoices
   const invoices = data?.data?.map((booking: any) => ({
     invoiceId: booking.documentId,
@@ -56,7 +55,7 @@ const InvoicesTab = ({ value, setTotalInvoices }: InvoicesTabProps) => {
     passengers: booking.passengers,
     from: booking.from.address,
     to: booking.to.address,
-    vehicle: booking.package?.name,
+    vehicle: booking.package?.type,
     flightNumber: booking.flight_number || null,
     features: booking.package?.features || [],
     gmFees: booking.amount * (booking.gm_fees_percentage / 100),

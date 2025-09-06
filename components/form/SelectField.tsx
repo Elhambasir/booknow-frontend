@@ -53,7 +53,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
-            <SelectContent position="popper"> {/* Add this prop */}
+            <SelectContent position="popper" avoidCollisions={true}> {/* Add this prop */}
               {options?.map((option, index) => (
                 <SelectItem
                   disabled={option.disabled}

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { removeMilliseconds, to12HourFormat } from "@/lib/utils";
-
+import { GenerateInvoicePDF } from "@/lib/usePDF";
 type Invoice = {
   invoiceId: string;
   date: string;
@@ -22,6 +22,11 @@ type Invoice = {
 };
 
 const InvoiceCard = ({ invoice }: { invoice: Invoice }) => {
+  const { jsPDFEnglish } = GenerateInvoicePDF(invoice);
+  const handleDownload = async () => {
+    await jsPDFEnglish(); // generates & downloads PDF
+  };
+
   return (
     <Card className="shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
       <CardHeader className="flex justify-between items-center">
@@ -67,7 +72,7 @@ const InvoiceCard = ({ invoice }: { invoice: Invoice }) => {
           Total Amount: {invoice.amount.toFixed(2)} {invoice.currency}
         </p>
 
-        <Button size="sm" className="mt-2">
+        <Button size="sm" className="mt-2" onClick={handleDownload}>
           Download PDF
         </Button>
       </CardContent>

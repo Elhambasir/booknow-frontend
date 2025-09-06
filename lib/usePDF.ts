@@ -2,6 +2,122 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { removeMilliseconds, to12HourFormat } from "./utils";
 
+export function GenerateInvoicePDF(invoiceData: any) {
+  async function jsPDFEnglish() {
+    const doc = new jsPDF();
+
+    // Title & Metadata
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(40, 40, 40);
+    doc.text("INVOICE", 105, 20, { align: "center" });
+
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(
+      `Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+      105,
+      28,
+      { align: "center" }
+    );
+
+    // Divider
+    doc.setDrawColor(200, 200, 200);
+    doc.line(15, 32, 195, 32);
+
+    let currentY = 40;
+
+    // If single or multiple invoices
+    const invoices = Array.isArray(invoiceData) ? invoiceData : [invoiceData];
+
+    invoices.forEach((invoice: any, index: number) => {
+      if (index > 0) {
+        doc.addPage();
+        currentY = 20;
+      }
+
+      // Invoice Header
+      const invoiceId = invoice.invoiceId?.slice(0, 8) || `N/A-${index}`;
+      doc.setFontSize(14);
+      doc.setTextColor(60, 120, 200);
+      doc.text(`Invoice #${invoiceId}`, 15, currentY);
+
+      // Status badge
+      const status = invoice.bookingStatus || "unknown";
+      const statusColor =
+        status === "confirmed"
+          ? [76, 175, 80]
+          : status === "pending"
+          ? [255, 152, 0]
+          : status === "canceled"
+          ? [244, 67, 54]
+          : [100, 100, 100];
+
+      doc.setFillColor(statusColor[0], statusColor[1], statusColor[2]);
+      doc.roundedRect(160, currentY - 6, 35, 8, 2, 2, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(9);
+      doc.text(status.toUpperCase(), 177, currentY, { align: "center" });
+      doc.setTextColor(40, 40, 40);
+
+      currentY += 12;
+
+      // Invoice Details Table
+      const details = [
+        ["Date", `${invoice.date || "N/A"} | ${to12HourFormat(removeMilliseconds(invoice.time)) || "N/A"}`],
+        ["From", invoice.from || "N/A"],
+        ["To", invoice.to || "N/A"],
+        ["Vehicle", invoice.vehicle || "N/A"],
+        ["Passengers", invoice.passengers?.toString() || "0"],
+        ["Features", invoice.features?.length ? invoice.features.join(", ") : "None"],
+        ["Total Amount", `${invoice.amount?.toFixed(2) || "0.00"} ${invoice.currency || ""}`],
+      ];
+
+      if (invoice.flightNumber) {
+        details.splice(4, 0, ["Flight", invoice.flightNumber]);
+      }
+
+      autoTable(doc, {
+        body: details,
+        startY: currentY,
+        theme: "grid",
+        headStyles: {
+          fillColor: [245, 245, 245],
+          textColor: [60, 120, 200],
+          fontStyle: "bold",
+        },
+        bodyStyles: {
+          textColor: [80, 80, 80],
+        },
+        columnStyles: {
+          0: { fontStyle: "bold", cellWidth: 40 },
+          1: { cellWidth: "auto" },
+        },
+        margin: { left: 15, right: 15 },
+      });
+
+      currentY = (doc as any).lastAutoTable.finalY + 15;
+
+      // Footer
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Invoice ID: ${invoice.invoiceId || "N/A"}`, 15, currentY + 5);
+      doc.text(
+        `Created: ${invoice.createdAt ? new Date(invoice.createdAt).toLocaleString() : "Unknown"}`,
+        195,
+        currentY + 5,
+        { align: "right" }
+      );
+    });
+
+    // Save PDF
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    doc.save(`invoice_${timestamp}.pdf`);
+  }
+
+  return { jsPDFEnglish };
+}
+
 export function GenerateBookingPDF(bookingData: any) {
   async function jsPDFEnglish() {
     const doc = new jsPDF();
